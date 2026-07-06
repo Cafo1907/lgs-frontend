@@ -19,7 +19,6 @@ type Tab = typeof TABS[number];
 export default function ParentHome({ user, onLogout }: Props) {
   const [tab, setTab] = useState<Tab>('📊 Özet');
   const [stats, setStats] = useState<SubjectStat[]>([]);
-  const [studentName, setStudentName] = useState('');
   const [calendar, setCalendar] = useState<CalendarDay[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
 
@@ -27,10 +26,6 @@ export default function ParentHome({ user, onLogout }: Props) {
     axios.get('/api/parent/stats').then(r => {
       setStats(r.data);
     }).finally(() => setLoadingStats(false));
-    // Öğrenci adını auth/me'den al
-    axios.get('/api/auth/me').then(r => {
-      // Velinin familyId'siyle aynı ailedeki öğrenciyi bulmak için stats'tan alacağız
-    });
   }, []);
 
   useEffect(() => {
