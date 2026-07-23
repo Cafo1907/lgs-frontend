@@ -24,9 +24,27 @@ export default function MockExamPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submitted = useRef(false);
+  const [reportOpenId, setReportOpenId] = useState<number | null>(null);
+  const [reportReason, setReportReason] = useState('');
+  const [reportSent, setReportSent] = useState<Record<number, boolean>>({});
+  const [reportSending, setReportSending] = useState(false);
 
   const questions = state?.questions ?? [];
   const examId = state?.examId;
+
+  const sendReport = async (q: Question) => {
+    setReportSending(true);
+    try {
+      await axios.post('/api/exam/report-question', { questionType: 'mock', questionId: q.id, questionText: q.text, reason: reportReason || null });
+      setReportSent(p => ({ ...p, [q.id]: true }));
+      setReportOpenId(null);
+      setReportReason('');
+    } catch {
+      alert('Bildirim gönderilemedi, tekrar deneyin.');
+    } finally {
+      setReportSending(false);
+    }
+  };
 
   const doSubmit = useCallback(async () => {
     if (submitted.current || !examId) return;
@@ -61,7 +79,7 @@ export default function MockExamPage() {
   const timerColor = timeLeft < 600 ? 'text-red-500' : timeLeft < 1800 ? 'text-orange-500' : 'text-slate-800';
 
   return (
-    <div className="max-w-md mx-auto min-h-screen flex flex-col bg-slate-50">
+    <div className="max-w-2xl mx-auto min-h-screen flex flex-col bg-slate-50">
       {timeUp && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl p-6 text-center max-w-xs w-full shadow-2xl">
@@ -136,6 +154,25 @@ export default function MockExamPage() {
                     </button>
                   );
                 })}
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                {reportSent[q.id] ? (
+                  <p className="text-xs text-green-600">✓ Bildiriminiz alındı, teşekkürler.</p>
+                ) : reportOpenId === q.id ? (
+                  <div className="space-y-2">
+                    <textarea value={reportReason} onChange={e => setReportReason(e.target.value)} placeholder="Neyin yanlış/belirsiz olduğunu kısaca yazabilirsin (opsiyonel)"
+                      rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-red-300" />
+                    <div className="flex gap-2">
+                      <button onClick={() => setReportOpenId(null)} className="flex-1 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold">Vazgeç</button>
+                      <button onClick={() => sendReport(q)} disabled={reportSending} className="flex-1 py-2 bg-red-500 text-white rounded-xl text-xs font-semibold disabled:opacity-50">
+                        {reportSending ? 'Gönderiliyor...' : 'Bildir'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button onClick={() => { setReportOpenId(q.id); setReportReason(''); }} className="text-xs text-slate-400 hover:text-red-500">🚩 Bu soruda hata var mı?</button>
+                )}
               </div>
             </div>
           );

@@ -8,11 +8,15 @@ interface User {
   email: string;
   role: 'STUDENT' | 'PARENT';
   isFirstLogin: boolean;
+  mustChangePassword?: boolean;
+  subscriptionExpiresAt?: string | null;
+  iban?: string | null;
+  branding?: { logoUrl: string | null; slogan: string | null; brandColor: string | null } | null;
 }
 
 axios.interceptors.request.use(cfg => {
   const token = localStorage.getItem('lgs_token');
-  if (token && cfg.headers) cfg.headers.Authorization = `Bearer ${token}`;
+  if (token && cfg.headers && !cfg.headers.Authorization) cfg.headers.Authorization = `Bearer ${token}`;
   return cfg;
 });
 
@@ -41,7 +45,7 @@ export function useAuth() {
   };
 
   const refreshUser = async () => {
-    const { data } = await axios.get('/api/auth/me');
+    const { data } = await axios.get('/api/auth/me', { headers: { 'Cache-Control': 'no-cache' } });
     setUser(data);
   };
 

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Fiyatlandırma Notları (Özel)</title>
+<style>
+  :root{
+    --ink:#1c1926; --ink-soft:#6b6478; --paper:#faf8f5; --card:#ffffff;
+    --line:#e8e3da; --violet-1:#7c3aed; --violet-soft:#f1ebfd; --gold:#f5c451;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#f1eef7; --ink-soft:#a99fc0; --paper:#15121e; --card:#1e1a2b;
+      --line:#332d45; --violet-1:#9b6bf2; --violet-soft:#241b3d; --gold:#f5c451;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,'Segoe UI',Roboto,sans-serif; line-height:1.6;
+    padding:32px 20px 80px;
+  }
+  .wrap{max-width:760px; margin:0 auto;}
+  .banner{
+    background:var(--gold); color:#3a2a06; font-size:.78rem; font-weight:700;
+    padding:10px 16px; border-radius:10px; margin-bottom:28px; text-align:center;
+  }
+  h1{font-family:Georgia,serif; font-size:1.6rem; margin:0 0 6px;}
+  p.sub{color:var(--ink-soft); font-size:.92rem; margin:0 0 28px;}
+  h2{font-family:Georgia,serif; font-size:1.15rem; margin:36px 0 12px;}
+  table{width:100%; border-collapse:separate; border-spacing:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; font-size:.88rem;}
+  th, td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line);}
+  th{background:var(--violet-soft); color:var(--violet-1); font-size:.72rem; text-transform:uppercase; letter-spacing:.04em;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.num{font-variant-numeric:tabular-nums; text-align:right;}
+  .note-box{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin-top:14px; font-size:.86rem; color:var(--ink-soft);
+  }
+  .note-box b{color:var(--ink);}
+  .calc-box{
+    background:var(--violet-soft); border-radius:14px; padding:18px; margin-top:16px;
+  }
+  .calc-box label{display:block; font-size:.78rem; font-weight:700; margin-bottom:5px;}
+  .calc-box input{
+    width:100%; padding:9px 12px; border:1px solid var(--line); border-radius:8px;
+    font-size:.9rem; margin-bottom:12px; background:var(--card); color:var(--ink); font-family:inherit;
+  }
+  .calc-box button{
+    width:100%; padding:11px; background:var(--violet-1); color:#fff; border:none;
+    border-radius:8px; font-weight:700; font-size:.88rem; cursor:pointer;
+  }
+  .calc-result{margin-top:14px; font-size:.9rem; display:none;}
+  .calc-result.show{display:block;}
+  .calc-result .row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed var(--line);}
+  .calc-result .row:last-child{border-bottom:none; font-weight:700;}
+  ul{padding-left:20px; font-size:.9rem; color:var(--ink-soft);}
+  li{margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="banner">🔒 Sadece senin referansın için — sunuma veya dershaneyle paylaşıma dahil değil.</div>
+
+  <h1>Kurumsal Lisans — Fiyatlandırma Notları</h1>
+  <p class="sub">Hedefim LGS'yi büyük dershane zincirlerine yıllık lisansla satma fikri üzerine hazırlanmış çalışma notları. Gerçek bir teklif değil, hâlâ hipotetik bir egzersiz.</p>
+
+  <h2>Kademeli Yıllık Lisans Tablosu</h2>
+  <table>
+    <thead>
+      <tr><th>Segment</th><th>Öğrenci Sayısı</th><th>Yıllık Lisans Ücreti</th><th>Öğrenci Başı (üst sınırda)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>0 – 250</td><td class="num">600.000 TL</td><td class="num">~2.400 TL</td></tr>
+      <tr><td>2</td><td>251 – 750</td><td class="num">1.350.000 TL</td><td class="num">~1.800 TL</td></tr>
+      <tr><td>3</td><td>751 – 1.500</td><td class="num">2.400.000 TL</td><td class="num">~1.600 TL</td></tr>
+      <tr><td>4</td><td>1.501 – 3.000</td><td class="num">4.200.000 TL</td><td class="num">~1.400 TL</td></tr>
+      <tr><td>5</td><td>3.001 – 5.000</td><td class="num">6.500.000 TL</td><td class="num">~1.300 TL</td></tr>
+      <tr><td>6</td><td>5.000+</td><td class="num" colspan="2">Özel görüşme</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-box">
+    <b>Model:</b> Ürün, alıcının domain'ine değil, satıcının (senin) kontrolündeki ayrı bir sunucuya kurulur; alıcı sadece kendi domain'ini DNS ile o sunucuya yönlendirir. Backend'de <code>LICENSE_EXPIRES_AT</code> gibi bir tarih + middleware kontrolü ile, süre dolunca sistem otomatik "offline"a düşer. Sunucu kontrolü sende kaldığı için alıcı bu kısıtlamayı kod üzerinden kaldıramaz — tek taraflı yenileme gücü sende kalır.
+  </div>
+
+  <div class="note-box">
+    <b>Güvenlik maddesi önerisi:</b> Öğrenci sayısı dilim üst sınırını 3 ay üst üste aşarsa bir üst segmente otomatik geçilir.
+  </div>
+
+  <div class="note-box">
+    <b>AI maliyeti uyarısı:</b> Claude API maliyeti öğrenci sayısıyla orantılı büyüyor (~800–960 TL/öğrenci/yıl tahmini). Bu yüzden "sınırsız kullanım" yerine kademeli + üst segment geçiş maddesi güvenli.
+  </div>
+
+  <div class="note-box">
+    <b>Tek seferlik satış senaryosu (alternatif):</b> Kaba değer bandı 2.500.000 – 4.500.000 TL (yaptırma maliyeti + stratejik değer bazlı, gerçek bir teklif/pazarlık değil).
+  </div>
+
+  <h2>Hızlı Hesaplayıcı</h2>
+  <p style="font-size:.86rem; color:var(--ink-soft); margin-top:-6px;">Bir dershanenin mevcut öğrenci başı yıllık ücretiyle, lisans bedelinin kaç öğrenciye denk geldiğini gör.</p>
+  <div class="calc-box">
+    <label for="c-students">Dershanenin öğrenci sayısı</label>
+    <input type="number" id="c-students" placeholder="Örn: 300" />
+    <label for="c-tuition">Öğrenci başı yıllık ücretleri (TL)</label>
+    <input type="number" id="c-tuition" placeholder="Örn: 80000" />
+    <button id="c-btn">Hesapla</button>
+    <div class="calc-result" id="c-result">
+      <div class="row"><span>Segment</span><span id="r-segment">—</span></div>
+      <div class="row"><span>Yıllık lisans ücreti</span><span id="r-fee">—</span></div>
+      <div class="row"><span>Öğrenci karşılığı</span><span id="r-count">—</span></div>
+      <div class="row"><span>Öğrenci tabanına oranı</span><span id="r-pct">—</span></div>
+    </div>
+  </div>
+
+  <h2>Bağlam / Hatırlatmalar</h2>
+  <ul>
+    <li>Bu fikir, oğlunun gittiği dershaneyle ilgili bir sohbetten esinlenen hipotetik bir senaryo. Şu ana kadar ne gerçek bir talep ne de aktif bir satış girişimi var.</li>
+    <li>Örnek senaryo (1000 aktif + 2000 potansiyel = 3000'e kadar) Segment 3'te başlar, büyüdükçe Segment 4'e geçer.</li>
+    <li>Bu konu tekrar gündeme gelirse (gerçek bir dershane teklifi/görüşmesi olursa) bu tabloyu güncelleyip üzerine inşa edebiliriz.</li>
+    <li>Dershaneye sunum yaparken bu sayfa/rakamlar hiçbir şekilde gösterilmemeli — sunum sadece ürün değerini anlatıyor, fiyat görüşmesi ayrı ve doğrudan senin yürüteceğin bir konuşma.</li>
+  </ul>
+</div>
+
+<script>
+  const TIERS = [
+    { max: 250, fee: 600000, label: 'Segment 1 (0–250)' },
+    { max: 750, fee: 1350000, label: 'Segment 2 (251–750)' },
+    { max: 1500, fee: 2400000, label: 'Segment 3 (751–1.500)' },
+    { max: 3000, fee: 4200000, label: 'Segment 4 (1.501–3.000)' },
+    { max: 5000, fee: 6500000, label: 'Segment 5 (3.001–5.000)' },
+  ];
+
+  document.getElementById('c-btn').addEventListener('click', () => {
+    const students = parseFloat(document.getElementById('c-students').value);
+    const tuition = parseFloat(document.getElementById('c-tuition').value);
+    if (!students || students <= 0 || !tuition || tuition <= 0) {
+      alert('Lütfen her iki alanı da doldurun.');
+      return;
+    }
+    const tier = TIERS.find(t => students <= t.max);
+    const result = document.getElementById('c-result');
+    if (!tier) {
+      document.getElementById('r-segment').textContent = 'Segment 6 (5.000+)';
+      document.getElementById('r-fee').textContent = 'Özel görüşme';
+      document.getElementById('r-count').textContent = '—';
+      document.getElementById('r-pct').textContent = '—';
+      result.classList.add('show');
+      return;
+    }
+    const count = Math.ceil(tier.fee / tuition);
+    const pct = Math.round((count / students) * 1000) / 10;
+    document.getElementById('r-segment').textContent = tier.label;
+    document.getElementById('r-fee').textContent = tier.fee.toLocaleString('tr-TR') + ' TL';
+    document.getElementById('r-count').textContent = count + ' öğrenci';
+    document.getElementById('r-pct').textContent = '%' + pct;
+    result.classList.add('show');
+  });
+</script>
+</body>
+</html>

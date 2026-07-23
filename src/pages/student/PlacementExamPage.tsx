@@ -89,7 +89,7 @@ export default function PlacementExamPage() {
   );
 
   return (
-    <div className="max-w-md mx-auto min-h-screen flex flex-col bg-slate-50">
+    <div className="max-w-2xl mx-auto min-h-screen flex flex-col bg-slate-50">
       {timeUp && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl p-6 text-center max-w-xs w-full shadow-2xl">

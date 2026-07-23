@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hedefim LGS — Tüm Özellikler</title>
+<meta name="description" content="Hedefim LGS'de öğrenci, veli, öğretmen ve dershane sahibi için tüm özellikler" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+:root{
+  --ink:#1c1926; --ink-soft:#6b6478; --paper:#faf8f5; --card:#ffffff; --line:#e8e3da;
+  --violet-1:#7c3aed; --violet-2:#5b21b6; --violet-soft:#f1ebfd;
+  --gold:#f5c451; --success:#1f8a5f;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#f1eef7; --ink-soft:#a99fc0; --paper:#15121e; --card:#1e1a2b; --line:#332d45;
+    --violet-1:#9b6bf2; --violet-2:#7c3aed; --violet-soft:#241b3d; --gold:#f5c451; --success:#4fd39a;
+  }
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:-apple-system,'Segoe UI',Roboto,sans-serif; line-height:1.55;
+}
+h1,h2,h3{font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif; font-weight:600; margin:0;}
+
+.hero{
+  background:linear-gradient(160deg, var(--violet-2) 0%, var(--violet-1) 55%, #a78bfa 100%);
+  color:#fff; padding:56px 6vw 44px; text-align:center;
+}
+.hero .kicker{font-size:.72rem; text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:var(--gold); margin-bottom:12px;}
+.hero h1{font-size:clamp(1.8rem,4vw,2.6rem); color:#fff;}
+.hero p{color:rgba(255,255,255,.85); max-width:56ch; margin:14px auto 0; font-size:1.02rem;}
+
+.wrap{max-width:820px; margin:0 auto; padding:36px 6vw 80px;}
+
+.role{
+  background:var(--card); border:1px solid var(--line); border-radius:18px; margin-bottom:16px; overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.role summary{
+  list-style:none; cursor:pointer; padding:20px 22px; display:flex; align-items:center; gap:16px;
+  user-select:none;
+}
+.role summary::-webkit-details-marker{display:none;}
+.role .emoji{font-size:1.7rem; flex-shrink:0;}
+.role .title-block{flex:1;}
+.role h2{font-size:1.15rem;}
+.role .sub{font-size:.82rem; color:var(--ink-soft); margin-top:2px; font-family:-apple-system,sans-serif;}
+.role .chevron{
+  font-size:1.1rem; color:var(--ink-soft); transition:transform .25s ease; flex-shrink:0;
+}
+.role[open] .chevron{transform:rotate(180deg);}
+.role[open] summary{border-bottom:1px solid var(--line);}
+
+.role-body{padding:6px 22px 22px;}
+.cat{margin-top:18px;}
+.cat:first-child{margin-top:6px;}
+.cat h3{
+  font-family:-apple-system,sans-serif; font-size:.78rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--violet-1); margin-bottom:10px;
+}
+.feat{display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;}
+.feat .dot{width:6px; height:6px; border-radius:50%; background:var(--violet-1); margin-top:8px; flex-shrink:0;}
+.feat .txt{font-size:.88rem; font-family:-apple-system,sans-serif;}
+.feat .txt b{color:var(--ink); font-weight:700;}
+.feat .txt span.desc{color:var(--ink-soft);}
+
+.limits{
+  margin-top:18px; background:var(--paper); border:1px dashed var(--line); border-radius:12px; padding:14px 16px;
+}
+.limits h3{
+  font-family:-apple-system,sans-serif; font-size:.72rem; font-weight:800; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--ink-soft); margin-bottom:6px;
+}
+.limits p{font-size:.82rem; color:var(--ink-soft); margin:0; font-family:-apple-system,sans-serif; line-height:1.6;}
+
+.mailtable{width:100%; border-collapse:collapse; font-size:.78rem; font-family:-apple-system,sans-serif; margin-top:6px;}
+.mailtable th{
+  text-align:left; padding:6px 8px; background:var(--violet-soft); color:var(--violet-1);
+  font-size:.66rem; text-transform:uppercase; letter-spacing:.04em; font-weight:800;
+}
+.mailtable td{padding:7px 8px; border-bottom:1px solid var(--line); color:var(--ink); vertical-align:top;}
+.mailtable tr:last-child td{border-bottom:none;}
+.mailtable td.when{color:var(--ink-soft); white-space:nowrap; font-weight:600;}
+
+.expand-all{
+  display:block; margin:0 auto 24px; background:var(--card); border:1px solid var(--line); color:var(--ink-soft);
+  font-family:-apple-system,sans-serif; font-size:.78rem; font-weight:700; padding:9px 18px; border-radius:100px;
+  cursor:pointer;
+}
+.expand-all:hover{border-color:var(--violet-1); color:var(--violet-1);}
+
+footer{text-align:center; font-size:.76rem; color:var(--ink-soft); padding:0 6vw 40px; font-family:-apple-system,sans-serif;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="kicker">Hedefim LGS</div>
+  <h1>Tüm Özellikler</h1>
+  <p>Öğrenci, veli, öğretmen ve dershane sahibi için sistemde neler var — rolüne tıkla, aç ve incele.</p>
+</div>
+
+<div class="wrap">
+  <button class="expand-all" id="toggleAllBtn">Tümünü Genişlet</button>
+
+  <!-- ÖĞRENCİ -->
+  <details class="role" id="role-student">
+    <summary>
+      <span class="emoji">🎓</span>
+      <span class="title-block"><h2>Öğrenci</h2><span class="sub">Sınav çözme, motivasyon, kişisel takip</span></span>
+      <span class="chevron">▾</span>
+    </summary>
+    <div class="role-body">
+      <div class="cat">
+        <h3>Ders Çalışma / Sınav Çözme</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Ders bazlı test çözme</b> — <span class="desc">Türkçe, Matematik, Fen, Sosyal, Din Kültürü, İngilizce'den istediği zaman kısa sınav başlatır. Sorular her seferinde yapay zekâ tarafından anlık üretilir — asla aynı soruları tekrar görmez.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Serbest gezinme</b> — <span class="desc">Sorular arasında ileri-geri gidip cevabını değiştirebilir; hangi soruların cevaplandığını renkli soru haritasından görür.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Cevabı geri alma</b> — <span class="desc">İşaretlediği şıkka tekrar basarak cevabı boşa çevirebilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Süre takibi</b> — <span class="desc">Geri sayan sayaç, süre azalınca renkli uyarı, süre dolunca otomatik gönderim.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Erken bitirme</b> — <span class="desc">Boş soru sayısını gösteren onayla sınavı istediği an bitirir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Soru hatası bildirme</b> — <span class="desc">Bir soruda sorun görürse tek tıkla (isteğe bağlı açıklamayla) bildirir.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Sonuç ve Geri Bildirim</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Anında sonuç</b> — <span class="desc">Doğru/yanlış/boş, net, başarı yüzdesi ve motive edici değerlendirme ("Mükemmel/İyi/Gelişiyor/Çalış").</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Kişisel rekor bildirimi</b> — <span class="desc">Bir derste en iyi netini kırınca özel kutlama kartı.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Yanlış/boş soru inceleme</b> — <span class="desc">Doğru cevap ile kendi cevabını yan yana görür, sadece yanlışları filtreleyebilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>AI ile çözüm anlatımı</b> — <span class="desc">"Çözümü Anlat" — yanlış yaptığı soru adım adım açıklanır.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Mini ders / konu özeti</b> — <span class="desc">"Konuyu Öğren" — o sorunun konusunu AI'dan kısa bir özet olarak isteyebilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Yanlışları tekrar çözme</b> — <span class="desc">O sınavdaki yanlış/boş sorulardan oluşan yeni bir tekrar sınavı başlatır.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Zaman analizi</b> — <span class="desc">Soru başına süre, toplam süre, en çok zaman harcanan 3 soru; detaylı zaman haritası (soru bazlı veya konu bazlı) — nerede zaman kaybettiğini fark eder.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Ana Sayfa / Motivasyon</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Günlük hedef</b> — <span class="desc">Sabit 15 soru hedefi, ilerleme çubuğu, tamamlayınca tebrik.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Çalışma serisi (streak)</b> — <span class="desc">🔥 Üst üste kaç gündür çalıştığını görür.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Rozet sistemi</b> — <span class="desc">İlk sınav, 3/7 gün seri, 25 sınav, ilk deneme, konu ustalığı, 100 soru, ders bazlı "Ustası" rozetleri.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Yeni rozet kutlaması</b> — <span class="desc">Kazanınca özel animasyonlu bildirim.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>İsimsiz sıralama</b> — <span class="desc">Şube (veya platform) içinde kaçıncı sırada olduğunu, kimliği hiç açığa çıkmadan görür.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Zayıf konu tespiti</b> — <span class="desc">Ana sayfada otomatik listelenir, AI destekli özetle tazelenebilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Konu haritası</b> — <span class="desc">Tüm derslerin tüm konularında hakimiyet yüzdesi (renk kodlu).</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Haftalık özet</b> — <span class="desc">Son 7 günün sınav/soru sayısı, çalışma günü, ortalama başarı, ders bazlı kırılım.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Hedef lise takibi</b> — <span class="desc">Veli tarafından girilen hedefe göre kendi puanının nerede durduğunu görür.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>LGS geri sayımı.</b></span></div>
+      </div>
+      <div class="cat">
+        <h3>Aylık Deneme Sınavı</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">2 haftada bir, belirli bir gün/saat penceresinde (10:00–19:00) açılan 90 soruluk gerçek LGS formatı deneme.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Deneme durumu (açık/kapalı/tamamlandı) ana sayfada görünür.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Ders sekmeleriyle gezinme, cevaplanan soru sayacı.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Detaylı sonuç velinin panelinde/mailinde — öğrenci sadece tamamladığını görür.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Seviye Tespiti (İlk Giriş)</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>3 seçenek</b> — <span class="desc">(1) Seviye tespit sınavı çözme — önerilen, (2) geçmiş deneme puanını kendi girme, (3) ders bazlı net girip sistemin hesaplamasını isteme.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Sınav öncesi amaç/kapsam bilgilendirmesi yapılır.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Sonuç, varsa önceki girilen puan/netle karşılaştırmalı gösterilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Tamamlanınca "kişisel çalışma planın hazır, veline iletildi" mesajıyla karşılanır.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Genel</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Sorular her zaman kişiye özel — tükenmeyen bir soru havuzu.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Zayıf konulara otomatik öncelik — fark etmeden en çok ihtiyacı olan konularda daha fazla pratik yapar.</span></span></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- VELİ -->
+  <details class="role" id="role-parent">
+    <summary>
+      <span class="emoji">👨‍👩‍👧</span>
+      <span class="title-block"><h2>Veli</h2><span class="sub">Takip, raporlama, günlük bilgilendirme</span></span>
+      <span class="chevron">▾</span>
+    </summary>
+    <div class="role-body">
+      <div class="cat">
+        <h3>Genel Özet</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Seviye tespit özeti, hedef okul kartı, zorluk seviyesi kartı, yavaş konular kartı, öğretmen notları, ders bazlı toplam istatistikler — tek ekranda.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Takvim</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Ayın hangi günü kaç sınav çözüldüğü, hangi derslerin çalışıldığı.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Rapor (Günlük / Haftalık / Aylık)</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Günlük bilgilendirme</b> — <span class="desc">Her akşam 21:00'de o gün çözülen tüm sınavların ders bazlı özeti otomatik mail olarak gelir — panele hiç girmeden bugün ne çalışıldığını bilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Ders bazlı doğru/yanlış/boş, net, başarı yüzdesi.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Konu bazlı detay: her konuda başarı yüzdesi + Zayıf/Orta/İyi etiketi.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Deneme Sınavı Raporu</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Geçmiş tüm denemeler arasında gezinme, puan trend grafiği.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Hedef okula göre karşılaştırma (kaç puan/net üstünde veya eksik, ilerleme çubuğu).</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Yanlış/boş soru inceleme</b> — <span class="desc">soru metni + doğru cevap + çocuğun cevabı.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">"Çözümü Anlat" ve "Konuyu Öğren" — AI destekli, veli de isteyebilir.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Bildirim Tercihleri</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">5 mail türünü ayrı ayrı açıp kapatma: Günlük Sınav Tamamlandı, Deneme Sonucu, Deneme Hatırlatması, Günlük Özet, Haftalık Rapor.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>2. Bilgilendirme E-postası</b> — <span class="desc">ikinci bir ilgili (örn. diğer ebeveyn) eklenebilir; giriş yapamaz, sadece bilgi alır.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Hedef Okul &amp; Zorluk Seviyesi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Hedef lise adı, gereken puan/net girilir — tüm raporlarda/maillerde kıyaslama için kullanılır.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Standart/Zorlayıcı seçimi; sistem yüksek başarıda "zorluğu artır" önerisi gösterir.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Öğretmen Notları</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Sadece kurum/dershane bağlantılı ailelerde — öğretmenin "veli görsün" işaretlediği notlar.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Yavaş Konular</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Ortalamanın belirgin üzerinde zaman harcanan konular (agregat, soru bazlı detay yok — bilinçli tasarım).</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Otomatik Mailler</h3>
+        <table class="mailtable">
+          <tr><th>Mail</th><th>Ne zaman</th><th>İçerik özeti</th></tr>
+          <tr><td>Hoş Geldin</td><td class="when">Kayıt anında</td><td>Veli+öğrenci giriş bilgileri, 3 seviye tespit seçeneği, mail takvimi</td></tr>
+          <tr><td>Deneme Hatırlatması</td><td class="when">Cuma 19:00*</td><td>Saat penceresi (10-19), önceki sonuç+kıyaslama, katılım durumu, zayıf konu rozetleri (🔁/🆕)</td></tr>
+          <tr><td>Günlük Sınav Tamamlandı</td><td class="when">Anında (opsiyonel)</td><td>Net/başarı, önceki sınava göre kıyaslama, zayıf konular</td></tr>
+          <tr><td>Deneme Sonucu</td><td class="when">Deneme bitince</td><td>Tahmini puan, hedefe göre durum, ders bazlı tablo</td></tr>
+          <tr><td>Günlük Özet</td><td class="when">Her akşam 21:00</td><td>O günün tüm sınavları ders bazlı toplanmış, kıyaslama, zayıf konular</td></tr>
+          <tr><td>Haftalık Rapor</td><td class="when">Pazar 22:00</td><td>Haftalık deneme özeti + hedef okul ilerlemesi, başarılı/gelişmesi gereken konular, zorluk önerisi</td></tr>
+          <tr><td>Seviye Tespit Sonucu</td><td class="when">Anında (zorunlu)</td><td>Tahmini puan, ders bazlı başarı, destek gereken konular</td></tr>
+        </table>
+        <p style="font-size:.72rem; color:var(--ink-soft); font-family:-apple-system,sans-serif; margin-top:8px;">*Sadece ertesi gün deneme sınavı varsa gönderilir (2 haftada bir). Hoş Geldin ve Seviye Tespit Sonucu hariç tüm mailler ayrı ayrı kapatılabilir.</p>
+      </div>
+    </div>
+  </details>
+
+  <!-- ÖĞRETMEN -->
+  <details class="role" id="role-teacher">
+    <summary>
+      <span class="emoji">🧑‍🏫</span>
+      <span class="title-block"><h2>Öğretmen</h2><span class="sub">Sınıf takibi, not sistemi, haftalık rapor</span></span>
+      <span class="chevron">▾</span>
+    </summary>
+    <div class="role-body">
+      <div class="cat">
+        <h3>Sınıf Takibi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Kendi girişi</b> — <span class="desc">E-posta/şifre ile giriş; şifresini kendi değiştiremez (kurum admini sıfırlar).</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Öğrenci listesi</b> — <span class="desc">Kendi şubesindeki (veya şubesi yoksa tüm) öğrenciler; arama + sıralama (pasiflik, net, isim).</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Sınıf özet panosu</b> — <span class="desc">Toplam öğrenci, 7 gün aktiflik oranı, ortalama net.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Sınıfın en zayıf konuları</b> — <span class="desc">Tüm öğrencilerin verisi birleştirilerek en fazla 8 konu.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Öğrenci detay paneli</b> — <span class="desc">Son 6 deneme trendi (grafik), en zayıf 8 konu.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Not Sistemi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Herhangi bir öğrenciye not bırakabilir, 3 görünürlük seviyesi seçilir: <b>Sadece ben</b> / <b>Tüm öğretmenler</b> / <b>Veli de görsün</b>.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Haftalık Otomatik E-posta</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Her Pazar 22:15: öğrenci sayısı, ortalama net, aktiflik oranı, en zayıf 5 konu, 14+ gün pasif olan ilk 5 öğrenci.</span></span></div>
+      </div>
+      <div class="limits">
+        <h3>Göremediği / Erişemediği</h3>
+        <p>Başka şube/kurumların verisi, kendi kullanım/aktivite verisinin yönetime raporlanması, öğretmen/öğrenci/veli hesap yönetimi (CRUD), içerik/soru bankası yönetimi.</p>
+      </div>
+    </div>
+  </details>
+
+  <!-- DERSHANE SAHİBİ -->
+  <details class="role" id="role-institution">
+    <summary>
+      <span class="emoji">🏢</span>
+      <span class="title-block"><h2>Dershane Sahibi</h2><span class="sub">Kurum, şube, öğretmen ve aile yönetimi</span></span>
+      <span class="chevron">▾</span>
+    </summary>
+    <div class="role-body">
+      <div class="cat">
+        <h3>Genel Bakış</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Toplam öğrenci/aile sayısı, 7 gün aktiflik oranı, ortalama net.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>Şube bazlı karşılaştırma</b> — <span class="desc">öğrenci sayısı, ortalama net, aktiflik oranı.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>"Geride Kalanlar" listesi</b> — <span class="desc">14+ gün pasif veya zayıflık skoru yüksek öğrenciler (en fazla 25).</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Şube Yönetimi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Ekleme, ad değiştirme, silme (silinince aileler "şubesiz" kalır, veri kaybı olmaz).</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Öğretmen Yönetimi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Oluşturma, şube değiştirme, şifre sıfırlama, silme.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Aile Yönetimi</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Tüm aileleri görüntüleme (şube, aktif/pasif, abonelik bitişi, tüm kullanıcılar).</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Aktif/pasif yapma, şube değiştirme, abonelik tarihi güncelleme.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Kullanıcı şifre sıfırlama, e-posta güncelleme, "ilk giriş" durumuna döndürme.</span></span></div>
+      </div>
+      <div class="cat">
+        <h3>Yeni Aile / Toplu Kayıt</h3>
+        <div class="feat"><span class="dot"></span><span class="txt"><span class="desc">Tekli aile oluşturma — otomatik hoş geldin maili gönderilir.</span></span></div>
+        <div class="feat"><span class="dot"></span><span class="txt"><b>CSV ile toplu kayıt</b> — <span class="desc">yüzlerce öğrenciyi tek seferde, satır bazlı hata toleransıyla.</span></span></div>
+      </div>
+      <div class="limits">
+        <h3>Göremediği / Erişemediği</h3>
+        <p>Şubesiz (B2C) bireysel aileler, başka kurumların verisi/kıyaslaması, platform ayarları/içerik yönetimi, kendi admin şifresini panelden değiştirme.</p>
+      </div>
+    </div>
+  </details>
+</div>
+
+<footer>Hedefim LGS © 2026 — bu sayfa 22.07.2026 tarihli sisteme dayanır.</footer>
+
+<script>
+  const details = [...document.querySelectorAll('.role')];
+  const btn = document.getElementById('toggleAllBtn');
+  let allOpen = false;
+  btn.addEventListener('click', () => {
+    allOpen = !allOpen;
+    details.forEach(d => d.open = allOpen);
+    btn.textContent = allOpen ? 'Tümünü Kapat' : 'Tümünü Genişlet';
+  });
+
+  // URL hash ile doğrudan bir role açma (örn. ozellikler.html#role-parent)
+  const hash = window.location.hash.slice(1);
+  if (hash) {
+    const target = document.getElementById(hash);
+    if (target) { target.open = true; target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+</script>
+</body>
+</html>

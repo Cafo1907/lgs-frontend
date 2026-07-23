@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReportView from './ReportView';
 import MockExamReport from './MockExamReport';
-import CostView from './CostView';
+import EmailPreferences from './EmailPreferences';
+import PlacementSummaryCard from '../../components/PlacementSummaryCard';
+import TargetSchoolCard from './TargetSchoolCard';
+import DifficultyLevelCard from './DifficultyLevelCard';
+import TopicTimeCard from './TopicTimeCard';
 
 interface SubjectStat {
   subject: { id: number; name: string; icon: string; color: string };
@@ -11,21 +15,44 @@ interface SubjectStat {
   totals: { correct: number; wrong: number; blank: number; total: number; percentage: number; net: number } | null;
 }
 interface CalendarDay { date: string; examCount: number; subjects: string[] }
-interface Props { user: { name: string }; onLogout: () => void }
+interface TeacherNote { id: number; note: string; teacherName: string; createdAt: string }
+interface Props { user: { name: string; subscriptionExpiresAt?: string | null; branding?: { logoUrl: string | null; slogan: string | null; brandColor: string | null } | null }; onLogout: () => void }
 
-const TABS = ['📊 Özet', '📅 Takvim', '📝 Rapor', '🏆 Deneme', '💰 Maliyet'] as const;
-type Tab = typeof TABS[number];
+function SubscriptionCountdown({ expiresAt }: { expiresAt: string }) {
+  const days = Math.ceil((new Date(expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  if (days > 14) return null;
+  const isRed = days <= 3;
+  const isOrange = days <= 7;
+  return (
+    <div className={`mx-4 mt-3 rounded-xl px-4 py-3 flex items-center gap-3 ${isRed ? 'bg-red-50 border border-red-200' : isOrange ? 'bg-orange-50 border border-orange-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+      <span className="text-xl">{isRed ? '🔴' : isOrange ? '🟠' : '🟡'}</span>
+      <div>
+        <p className={`text-sm font-bold ${isRed ? 'text-red-700' : isOrange ? 'text-orange-700' : 'text-yellow-700'}`}>
+          {days <= 0 ? 'Aboneliğiniz bugün sona eriyor!' : `Abonelik yenilemesine ${days} gün kaldı`}
+        </p>
+        <p className={`text-xs mt-0.5 ${isRed ? 'text-red-500' : isOrange ? 'text-orange-500' : 'text-yellow-600'}`}>
+          Yenileme için ödemenizi yapın ve yöneticinizi bilgilendirin.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+const ALL_TABS = ['📊 Özet', '📅 Takvim', '📝 Rapor', '🏆 Deneme', '✉️ Bildirimler'] as const;
+type Tab = typeof ALL_TABS[number];
 
 export default function ParentHome({ user, onLogout }: Props) {
   const [tab, setTab] = useState<Tab>('📊 Özet');
   const [stats, setStats] = useState<SubjectStat[]>([]);
   const [calendar, setCalendar] = useState<CalendarDay[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
+  const [teacherNotes, setTeacherNotes] = useState<TeacherNote[]>([]);
 
   useEffect(() => {
     axios.get('/api/parent/stats').then(r => {
       setStats(r.data);
     }).finally(() => setLoadingStats(false));
+    axios.get('/api/parent/teacher-notes').then(r => setTeacherNotes(r.data)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -58,20 +85,25 @@ export default function ParentHome({ user, onLogout }: Props) {
   const calMap = new Map(calendar.map(d => [d.date, d]));
 
   return (
-    <div className="max-w-md mx-auto min-h-screen pb-8">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-6 pt-12 pb-6 text-white">
+    <div className="max-w-2xl mx-auto min-h-screen pb-8">
+      <div className={`px-6 pt-12 pb-6 text-white ${user.branding?.brandColor ? '' : 'bg-gradient-to-r from-purple-600 to-purple-700'}`}
+        style={user.branding?.brandColor ? { background: `linear-gradient(to right, ${user.branding.brandColor}, ${user.branding.brandColor}dd)` } : undefined}>
         <div className="flex justify-between items-start">
           <div>
+            {user.branding?.logoUrl && <img src={user.branding.logoUrl} alt="Kurum logosu" className="h-8 mb-1.5 rounded bg-white/90 px-2 py-1 object-contain" />}
             <p className="text-purple-100 text-sm">Veli Paneli</p>
             <h1 className="text-xl font-bold mt-0.5">{user.name}</h1>
+            {user.branding?.slogan && <p className="text-white/70 text-xs italic mt-0.5">{user.branding.slogan}</p>}
           </div>
           <button onClick={onLogout} className="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all">Çıkış →</button>
         </div>
       </div>
 
+      {user.subscriptionExpiresAt && <SubscriptionCountdown expiresAt={user.subscriptionExpiresAt} />}
+
       <div className="bg-white border-b sticky top-0 z-40 overflow-x-auto">
         <div className="flex gap-1 px-3 py-2 min-w-max">
-          {TABS.map(t => (
+          {ALL_TABS.map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${tab === t ? 'bg-purple-500 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>
               {t}
@@ -84,6 +116,23 @@ export default function ParentHome({ user, onLogout }: Props) {
         {/* ÖZET */}
         {tab === '📊 Özet' && (
           <div className="space-y-4">
+            <PlacementSummaryCard />
+            <TargetSchoolCard />
+            <DifficultyLevelCard />
+            <TopicTimeCard />
+            {teacherNotes.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-sm p-4">
+                <h3 className="text-sm font-semibold text-slate-700 mb-2">🧑‍🏫 Öğretmen Notları</h3>
+                <div className="space-y-1.5">
+                  {teacherNotes.map(n => (
+                    <div key={n.id} className="bg-purple-50 rounded-xl px-3 py-2">
+                      <div className="text-sm text-slate-700">{n.note}</div>
+                      <div className="text-[11px] text-slate-400 mt-1">{n.teacherName} · {new Date(n.createdAt).toLocaleDateString('tr-TR')}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             {loadingStats ? (
               <div className="flex justify-center pt-16"><div className="animate-spin rounded-full h-8 w-8 border-2 border-purple-500 border-t-transparent" /></div>
             ) : (
@@ -177,7 +226,7 @@ export default function ParentHome({ user, onLogout }: Props) {
 
         {tab === '📝 Rapor' && <ReportView />}
         {tab === '🏆 Deneme' && <MockExamReport />}
-        {tab === '💰 Maliyet' && <CostView />}
+        {tab === '✉️ Bildirimler' && <EmailPreferences />}
       </div>
     </div>
   );

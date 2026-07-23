@@ -1,0 +1,1788 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hedefim LGS — Kurumsal Sunum</title>
+<meta name="description" content="Hedefim LGS kurumsal değerlendirme sunumu" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#1c1926;
+  --ink-soft:#6b6478;
+  --paper:#faf8f5;
+  --card:#ffffff;
+  --line:#e8e3da;
+  --violet-1:#7c3aed;
+  --violet-2:#5b21b6;
+  --violet-soft:#f1ebfd;
+  --gold:#f5c451;
+  --gold-soft:#fdf3d9;
+  --success:#1f8a5f;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#f1eef7;
+    --ink-soft:#a99fc0;
+    --paper:#15121e;
+    --card:#1e1a2b;
+    --line:#332d45;
+    --violet-1:#9b6bf2;
+    --violet-2:#7c3aed;
+    --violet-soft:#241b3d;
+    --gold:#f5c451;
+    --gold-soft:#3a3116;
+    --success:#4fd39a;
+  }
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
+  line-height:1.55;
+  overflow:hidden;
+}
+h1,h2,h3{
+  font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  font-weight:600;
+  text-wrap:balance;
+  margin:0;
+}
+::selection{background:var(--gold-soft);}
+
+/* ── nav dots ───────────────────────────── */
+.dots{
+  position:fixed;
+  right:22px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:50;
+}
+.dots a{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--line);
+  display:block;
+  transition:transform .2s, background .2s;
+}
+.dots a:hover, .dots a.active{background:var(--violet-1); transform:scale(1.3);}
+@media (max-width:680px){ .dots{display:none;} }
+
+/* ── slide shell ────────────────────────── */
+.slide{
+  position:fixed;
+  inset:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:80px 8vw;
+  opacity:0;
+  visibility:hidden;
+  transform:translateX(24px);
+  transition:opacity .38s ease, transform .38s ease, visibility 0s linear .38s;
+  overflow-y:auto;
+}
+.slide.active{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(0);
+  transition:opacity .38s ease, transform .38s ease;
+  z-index:2;
+}
+.slide.prev{transform:translateX(-24px);}
+@media (prefers-reduced-motion:reduce){
+  .slide{transition:opacity .01s linear, visibility 0s linear;}
+}
+.slide-inner{max-width:920px; margin:0 auto; width:100%;}
+.kicker{
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:700;
+  color:var(--violet-1);
+  margin-bottom:14px;
+}
+
+/* ── cover ──────────────────────────────── */
+.cover{
+  background:linear-gradient(160deg, var(--violet-2) 0%, var(--violet-1) 55%, #a78bfa 100%);
+  color:#fff;
+  text-align:center;
+  align-items:center;
+  overflow:hidden;
+}
+.cover .slide-inner{display:flex; flex-direction:column; align-items:center; gap:22px;}
+.cover-mark{width:88px;height:88px;}
+.cover h1{
+  font-size:clamp(2.2rem,5vw,3.4rem);
+  color:#fff;
+  letter-spacing:-0.01em;
+}
+.cover h1 sup{
+  font-family:-apple-system,sans-serif;
+  font-weight:800;
+  font-size:.34em;
+  color:var(--gold);
+  margin-left:.15em;
+  vertical-align:super;
+}
+.cover p.tagline{
+  font-size:1.05rem;
+  color:rgba(255,255,255,.86);
+  max-width:34ch;
+}
+.cover .for-line{
+  margin-top:18px;
+  font-size:.8rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.65);
+  border-top:1px solid rgba(255,255,255,.25);
+  padding-top:16px;
+}
+.cover-decor{position:absolute; inset:0; overflow:hidden; pointer-events:none;}
+.cover-decor span{position:absolute; opacity:.16; font-size:2.6rem;}
+.scroll-cue{
+  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+  font-size:.72rem; color:rgba(255,255,255,.7); letter-spacing:.08em;
+  display:flex; align-items:center; gap:6px;
+}
+.scroll-cue .arrow{animation:nudge 1.8s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
+@media (prefers-reduced-motion:reduce){.scroll-cue .arrow{animation:none;}}
+
+/* ── slide controls ─────────────────────── */
+.slide-controls{
+  position:fixed; left:0; right:0; bottom:20px;
+  display:flex; align-items:center; justify-content:center; gap:18px;
+  z-index:50; pointer-events:none;
+}
+.slide-controls > *{pointer-events:auto;}
+.nav-btn{
+  width:40px; height:40px; border-radius:50%;
+  background:var(--card); border:1px solid var(--line); color:var(--ink);
+  font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+}
+.nav-btn:disabled{opacity:.35;}
+.slide-counter{
+  font-variant-numeric:tabular-nums; font-size:.78rem; color:var(--ink-soft);
+  background:var(--card); border:1px solid var(--line); border-radius:100px;
+  padding:8px 16px; box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+
+/* ── generic headings ───────────────────── */
+.slide h2{font-size:clamp(1.6rem,3.4vw,2.3rem); margin-bottom:20px;}
+.slide p.lead{color:var(--ink-soft); font-size:1.05rem; max-width:62ch; margin-bottom:36px;}
+
+/* ── problem list ───────────────────────── */
+.problem-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+@media (max-width:680px){.problem-grid{grid-template-columns:1fr;}}
+.problem-card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:20px 22px;
+}
+.problem-card .glyph{font-size:1.4rem; margin-bottom:10px; display:block;}
+.problem-card h3{font-size:1rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:6px;}
+.problem-card p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+
+/* ── feature cards ──────────────────────── */
+.feature-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.feature-row.cols-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:900px){.feature-row, .feature-row.cols-3{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.feature-row, .feature-row.cols-3{grid-template-columns:1fr;}}
+.feature-card{
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  padding:22px 18px; text-align:center;
+}
+.feature-card .glyph{font-size:1.8rem; margin-bottom:10px; display:block;}
+.feature-card h3{font-size:.92rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:6px;}
+.feature-card p{font-size:.8rem; color:var(--ink-soft); margin:0; line-height:1.5;}
+
+/* ── readiness checklist ────────────────── */
+.check-list{display:flex; flex-direction:column; gap:12px; margin-bottom:8px;}
+.check-item{
+  display:grid; grid-template-columns:40px 1fr auto; align-items:center; gap:16px;
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:16px 20px;
+}
+.check-item .icon{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--success); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; font-weight:700;
+}
+.check-item h3{font-size:.98rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:3px;}
+.check-item p{font-size:.82rem; color:var(--ink-soft); margin:0;}
+.check-item .tag{
+  font-size:.68rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  background:var(--violet-soft); color:var(--violet-1);
+  padding:5px 10px; border-radius:100px; white-space:nowrap;
+}
+
+/* ── flow ────────────────────────────────── */
+.flow{display:flex; flex-wrap:wrap; gap:0; align-items:stretch; counter-reset:step;}
+.flow-step{
+  flex:1 1 200px; background:var(--card); border:1px solid var(--line);
+  border-radius:14px; padding:20px 18px; position:relative; margin:6px;
+}
+.flow-step .num{
+  counter-increment:step;
+  font-family:Georgia,serif; font-weight:700; font-size:1.5rem;
+  color:var(--gold); -webkit-text-stroke:1.4px var(--violet-1);
+  display:block; margin-bottom:8px;
+}
+.flow-step h3{font-size:.92rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:5px;}
+.flow-step p{font-size:.8rem; color:var(--ink-soft); margin:0;}
+
+/* ── roadmap ─────────────────────────────── */
+.roadmap-list{display:flex; flex-direction:column; gap:10px;}
+.roadmap-item{
+  display:flex; align-items:center; gap:16px;
+  background:var(--card); border:1px dashed var(--line); border-radius:14px;
+  padding:16px 20px;
+}
+.roadmap-item .icon{font-size:1.3rem;}
+.roadmap-item h3{font-size:.94rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:2px;}
+.roadmap-item p{font-size:.8rem; color:var(--ink-soft); margin:0;}
+
+/* ── closing ─────────────────────────────── */
+.closing{
+  background:linear-gradient(160deg, var(--violet-2) 0%, var(--violet-1) 55%, #a78bfa 100%);
+  color:#fff; text-align:center; align-items:center;
+}
+.closing .slide-inner{display:flex; flex-direction:column; align-items:center; gap:20px;}
+.closing h2{color:#fff; font-size:clamp(1.7rem,4vw,2.5rem);}
+.closing p{color:rgba(255,255,255,.85); max-width:44ch; font-size:1rem;}
+.cta-row{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px;}
+.cta{
+  font-weight:700; font-size:.92rem; padding:13px 26px; border-radius:100px;
+  font-family:-apple-system,sans-serif;
+}
+.cta.primary{background:var(--gold); color:#3a2a06;}
+.cta.ghost{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.4); color:#fff;}
+.closing .stat-row{display:flex; gap:34px; margin-top:10px; flex-wrap:wrap; justify-content:center;}
+.closing .stat{text-align:center;}
+.closing .stat b{display:block; font-size:1.7rem; font-family:Georgia,serif;}
+.closing .stat span{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.7);}
+.closing .stat-footnote{
+  font-size:.78rem; color:rgba(255,255,255,.7); max-width:40ch; margin-top:2px;
+}
+
+/* ── pilot form ──────────────────────────── */
+.pilot-form{
+  margin-top:22px; width:100%; max-width:440px; text-align:left;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22);
+  border-radius:18px; padding:22px 22px 20px;
+}
+.pilot-form .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.pilot-form .row.single{grid-template-columns:1fr;}
+.pilot-form label{
+  display:block; font-size:.72rem; color:rgba(255,255,255,.75);
+  margin-bottom:4px; font-family:-apple-system,sans-serif;
+}
+.pilot-form input, .pilot-form textarea{
+  width:100%; background:rgba(255,255,255,.94); border:1px solid transparent;
+  border-radius:10px; padding:9px 11px; font-size:.86rem; color:#1c1926;
+  font-family:-apple-system,sans-serif; margin-bottom:12px;
+}
+.pilot-form input:focus, .pilot-form textarea:focus{outline:2px solid var(--gold);}
+.pilot-form textarea{resize:vertical; min-height:56px;}
+.pilot-form .submit-btn{
+  width:100%; border:none; cursor:pointer;
+  background:var(--gold); color:#3a2a06; font-weight:700; font-size:.9rem;
+  padding:12px; border-radius:10px; font-family:-apple-system,sans-serif;
+}
+.pilot-form .submit-btn:disabled{opacity:.6; cursor:default;}
+.pilot-form .form-msg{
+  margin-top:10px; font-size:.8rem; text-align:center; font-family:-apple-system,sans-serif;
+}
+.pilot-form .form-msg.ok{color:#c7f9dd;}
+.pilot-form .form-msg.err{color:#ffd0d0;}
+.pilot-toggle-wrap{display:flex; flex-direction:column; align-items:center; width:100%;}
+
+@media (max-width:680px){
+  .slide{padding:64px 6vw;}
+}
+
+/* ── ekran görüntüsü mockup çerçevesi ───── */
+.shot-wrap{display:flex; justify-content:center;}
+.browser-frame{
+  width:100%; max-width:520px; background:#f8fafc; border-radius:16px;
+  border:1px solid rgba(0,0,0,.08); overflow:hidden;
+  box-shadow:0 24px 60px rgba(20,10,40,.22), 0 4px 14px rgba(20,10,40,.1);
+}
+.browser-topbar{
+  background:#e4e0d6; display:flex; align-items:center; gap:6px; padding:9px 12px;
+}
+.browser-dot{width:9px; height:9px; border-radius:50%;}
+.browser-url{
+  background:#fff; border-radius:7px; padding:4px 12px; font-size:.68rem; color:#64748b;
+  margin-left:8px; flex:1; font-family:-apple-system,sans-serif; text-align:center;
+}
+.mock-body{max-height:420px; overflow:hidden; position:relative;}
+.mock-body::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:32px;
+  background:linear-gradient(to bottom, transparent, #f8fafc);
+}
+
+/* mock: genel slate header */
+.mock-header{background:linear-gradient(to right,#1e293b,#0f172a); color:#fff; padding:20px 18px 16px;}
+.mock-header .emoji{font-size:1.5rem; margin-bottom:6px;}
+.mock-header h4{font-family:-apple-system,sans-serif; font-size:1rem; font-weight:800; margin:0;}
+.mock-header p{font-family:-apple-system,sans-serif; font-size:.72rem; color:#94a3b8; margin:2px 0 0;}
+.mock-header.purple{background:linear-gradient(to right,#9333ea,#7c3aed);}
+.mock-header.purple p{color:#e9d5ff;}
+
+.mock-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:12px;}
+.mock-stat{background:#fff; border-radius:12px; padding:12px 8px; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.mock-stat b{display:block; font-family:-apple-system,sans-serif; font-size:1.15rem; font-weight:800; color:#1e293b;}
+.mock-stat span{font-family:-apple-system,sans-serif; font-size:.62rem; color:#64748b;}
+
+.mock-section{padding:0 12px 12px;}
+.mock-card{background:#fff; border-radius:14px; padding:12px 14px; box-shadow:0 1px 2px rgba(0,0,0,.04); margin-bottom:8px;}
+.mock-card h5{font-family:-apple-system,sans-serif; font-size:.76rem; font-weight:800; color:#334155; margin:0 0 8px;}
+.mock-card p.hint{font-family:-apple-system,sans-serif; font-size:.62rem; color:#94a3b8; margin:-6px 0 8px;}
+
+.mock-row{display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-radius:10px; padding:8px 10px; margin-bottom:5px; font-family:-apple-system,sans-serif;}
+.mock-row .name{font-size:.72rem; font-weight:800; color:#334155;}
+.mock-row .sub{font-size:.62rem; color:#94a3b8;}
+.mock-row .right{text-align:right;}
+.mock-badge{font-size:.6rem; font-weight:700; padding:2px 7px; border-radius:100px;}
+.badge-green{background:#dcfce7; color:#15803d;}
+.badge-red{background:#fee2e2; color:#dc2626;}
+.badge-orange{background:#ffedd5; color:#c2410c;}
+.badge-purple{background:#f3e8ff; color:#7e22ce;}
+.badge-indigo{background:#e0e7ff; color:#4338ca;}
+
+.mock-bars{display:flex; align-items:flex-end; gap:6px; height:70px; padding:4px 4px 0;}
+.mock-bar{flex:1; background:#a855f7; border-radius:5px 5px 0 0;}
+.mock-bar-label{text-align:center; font-size:.55rem; color:#64748b; margin-top:3px; font-family:-apple-system,sans-serif;}
+
+.mock-upload{border:2px dashed #cbd5e1; border-radius:12px; padding:16px; text-align:center; font-family:-apple-system,sans-serif;}
+.mock-upload .icon{font-size:1.4rem;}
+.mock-upload p{font-size:.68rem; color:#64748b; margin:6px 0 0;}
+.mock-btn{background:#1e293b; color:#fff; text-align:center; border-radius:10px; padding:9px; font-family:-apple-system,sans-serif; font-size:.72rem; font-weight:700; margin-top:8px;}
+
+.shot-caption{text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:14px; max-width:52ch; margin-left:auto; margin-right:auto;}
+.shot-caption b{color:var(--ink);}
+
+.mock-input{width:100%; border:1px solid #e2e8f0; border-radius:9px; padding:8px 10px; font-family:-apple-system,sans-serif; font-size:.7rem; color:#334155; background:#fff; margin-bottom:8px;}
+.mock-textarea{min-height:44px;}
+.mock-visibility{display:flex; flex-direction:column; gap:6px; margin-bottom:8px;}
+.mock-visibility-opt{display:flex; align-items:center; gap:8px; border:1px solid #e2e8f0; border-radius:9px; padding:7px 10px; font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569;}
+.mock-visibility-opt.selected{border-color:#7c3aed; background:#f5f0ff; color:#6d28d9; font-weight:700;}
+.mock-visibility-opt .dot{width:13px; height:13px; border-radius:50%; border:2px solid #cbd5e1; flex-shrink:0;}
+.mock-visibility-opt.selected .dot{border-color:#7c3aed; background:#7c3aed;}
+
+.redpen-note{
+  font-family:'Caveat', cursive; font-weight:600; color:#c0392b;
+  font-size:1.15rem; line-height:1.4; margin:2px 0 8px 2px;
+}
+
+/* ── karşılaştırma tablosu ───────────────── */
+.compare-table{
+  width:100%; border-collapse:separate; border-spacing:0;
+  background:var(--card); border:1px solid var(--line); border-radius:16px;
+  overflow:hidden; font-size:.86rem;
+}
+.compare-table th, .compare-table td{
+  padding:12px 14px; text-align:left; border-bottom:1px solid var(--line);
+}
+.compare-table thead th{
+  background:var(--violet-soft); color:var(--violet-1); font-size:.72rem;
+  text-transform:uppercase; letter-spacing:.04em; font-weight:700;
+}
+.compare-table thead th:first-child{background:transparent; color:var(--ink-soft);}
+.compare-table tbody tr:last-child td{border-bottom:none;}
+.compare-table td.feature-name{font-weight:600; color:var(--ink);}
+.compare-table td.check{text-align:center; font-size:1.1rem;}
+.compare-table td.check.yes{color:var(--success);}
+.compare-table td.check.no{color:#cbd5e1;}
+.compare-table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+
+/* Hedefim LGS sütununu öne çıkar, diğer iki yöntemi soluklaştır */
+.compare-table th:nth-child(2), .compare-table th:nth-child(3),
+.compare-table td:nth-child(2), .compare-table td:nth-child(3){
+  opacity:.55;
+}
+.compare-table thead th:nth-child(4){
+  background:var(--violet-1); color:#fff; border-top:2px solid var(--violet-1);
+}
+.compare-table td:nth-child(4){
+  background:var(--violet-soft);
+  border-left:2px solid var(--violet-1);
+  border-right:2px solid var(--violet-1);
+}
+.compare-table tbody tr:last-child td:nth-child(4){
+  border-bottom:2px solid var(--violet-1);
+}
+.compare-table td:nth-child(4).check.yes{
+  color:var(--violet-1); font-weight:800; font-size:1.2rem;
+}
+
+.trust-note{
+  margin-top:18px;
+  background:linear-gradient(135deg, var(--violet-soft), rgba(124,58,237,.06));
+  border:1px solid rgba(124,58,237,.3); border-left:5px solid var(--violet-1);
+  border-radius:16px; padding:20px 24px; display:flex; gap:16px; align-items:flex-start;
+  box-shadow:0 10px 28px rgba(124,58,237,.14);
+}
+.trust-note .glyph{
+  font-size:1.5rem; flex-shrink:0; width:46px; height:46px; border-radius:50%;
+  background:var(--card); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.trust-note p{font-size:.96rem; color:var(--ink); margin:0; line-height:1.55;}
+.trust-note p b{color:var(--violet-1); font-weight:800;}
+
+/* mail frame */
+.mail-frame{
+  width:100%; max-width:520px; background:#fff; border-radius:16px;
+  border:1px solid rgba(0,0,0,.08); overflow:hidden;
+  box-shadow:0 24px 60px rgba(20,10,40,.22), 0 4px 14px rgba(20,10,40,.1);
+  font-family:-apple-system,sans-serif;
+}
+.mail-topbar{background:#f1f5f9; padding:12px 16px; border-bottom:1px solid #e2e8f0;}
+.mail-topbar .subject{font-size:.82rem; font-weight:800; color:#1e293b;}
+.mail-topbar .meta{font-size:.66rem; color:#94a3b8; margin-top:3px;}
+.mail-body{padding:16px; max-height:400px; overflow:hidden; position:relative;}
+.mail-body::after{content:""; position:absolute; left:0; right:0; bottom:0; height:32px; background:linear-gradient(to bottom, transparent, #fff);}
+.mail-row{display:flex; gap:14px; justify-content:center; flex-wrap:nowrap; align-items:flex-start;}
+.mail-frame.mini{max-width:270px; flex:1 1 270px;}
+@media (max-width:900px){ .mail-row{flex-wrap:wrap;} }
+.mail-frame.mini .mail-topbar .subject{font-size:.68rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.mail-frame.mini .mail-body{padding:12px; max-height:320px;}
+.mail-frame.mini .mail-label{font-family:-apple-system,sans-serif; font-size:.72rem; font-weight:800; color:#7c3aed; margin:0 0 8px;}
+.mail-h{color:#7c3aed; font-size:.86rem; font-weight:800; margin:0 0 10px;}
+.mail-table{width:100%; border-collapse:collapse; font-size:.68rem; margin-bottom:12px;}
+.mail-table td{padding:3px 0; color:#374151;}
+.mail-table td:first-child{color:#6b7280; width:110px;}
+.mail-section-title{font-size:.72rem; font-weight:800; color:#1f2937; margin:12px 0 6px;}
+
+/* exam screen */
+.exam-topbar{background:#1e293b; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:12px 16px; font-family:-apple-system,sans-serif;}
+.exam-topbar .q-count{font-size:.72rem; font-weight:700;}
+.exam-topbar .timer{font-size:.78rem; font-weight:800; background:rgba(255,255,255,.12); padding:4px 10px; border-radius:8px; font-variant-numeric:tabular-nums;}
+.exam-progress{height:4px; background:#334155;}
+.exam-progress-fill{height:100%; background:#a855f7; width:26%;}
+.exam-question{padding:16px; font-family:-apple-system,sans-serif;}
+.exam-question .qtext{font-size:.78rem; color:#1e293b; font-weight:600; line-height:1.5; margin-bottom:12px;}
+.exam-option{display:flex; align-items:center; gap:8px; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px 11px; font-size:.72rem; color:#334155; margin-bottom:7px;}
+.exam-option .letter{width:20px; height:20px; border-radius:50%; background:#f1f5f9; color:#64748b; font-weight:800; font-size:.62rem; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.exam-option.selected{border-color:#7c3aed; background:#f5f0ff;}
+.exam-option.selected .letter{background:#7c3aed; color:#fff;}
+
+@media (max-width:680px){
+  .browser-frame, .mail-frame{max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<nav class="dots" role="tablist" aria-label="Slayt gezinme">
+  <a href="#" data-goto="0" class="active" role="tab" aria-label="Slayt 1"></a>
+  <a href="#" data-goto="1" role="tab" aria-label="Slayt 2"></a>
+  <a href="#" data-goto="2" role="tab" aria-label="Slayt 3"></a>
+  <a href="#" data-goto="3" role="tab" aria-label="Slayt 4"></a>
+  <a href="#" data-goto="4" role="tab" aria-label="Slayt 5"></a>
+  <a href="#" data-goto="5" role="tab" aria-label="Slayt 6"></a>
+  <a href="#" data-goto="6" role="tab" aria-label="Slayt 7"></a>
+  <a href="#" data-goto="7" role="tab" aria-label="Slayt 8"></a>
+  <a href="#" data-goto="8" role="tab" aria-label="Slayt 9"></a>
+  <a href="#" data-goto="9" role="tab" aria-label="Slayt 10"></a>
+  <a href="#" data-goto="10" role="tab" aria-label="Slayt 11"></a>
+  <a href="#" data-goto="11" role="tab" aria-label="Slayt 12"></a>
+  <a href="#" data-goto="12" role="tab" aria-label="Slayt 13"></a>
+  <a href="#" data-goto="13" role="tab" aria-label="Slayt 14"></a>
+  <a href="#" data-goto="14" role="tab" aria-label="Slayt 15"></a>
+  <a href="#" data-goto="15" role="tab" aria-label="Slayt 16"></a>
+  <a href="#" data-goto="16" role="tab" aria-label="Slayt 17"></a>
+  <a href="#" data-goto="17" role="tab" aria-label="Slayt 18"></a>
+  <a href="#" data-goto="18" role="tab" aria-label="Slayt 19"></a>
+  <a href="#" data-goto="19" role="tab" aria-label="Slayt 20"></a>
+  <a href="#" data-goto="20" role="tab" aria-label="Slayt 21"></a>
+  <a href="#" data-goto="21" role="tab" aria-label="Slayt 22"></a>
+  <a href="#" data-goto="22" role="tab" aria-label="Slayt 23"></a>
+  <a href="#" data-goto="23" role="tab" aria-label="Slayt 24"></a>
+  <a href="#" data-goto="24" role="tab" aria-label="Slayt 25"></a>
+  <a href="#" data-goto="25" role="tab" aria-label="Slayt 26"></a>
+</nav>
+
+<div class="slide-controls">
+  <button class="nav-btn" id="prevBtn" aria-label="Önceki slayt">‹</button>
+  <span class="slide-counter"><span id="counterNow">1</span> / <span id="counterTotal">23</span></span>
+  <button class="nav-btn" id="nextBtn" aria-label="Sonraki slayt">›</button>
+</div>
+
+<button id="presenterBtn" type="button" hidden
+  style="position:fixed; top:16px; left:16px; z-index:60; background:var(--card); border:1px solid var(--line); color:var(--ink-soft); font-size:.72rem; font-weight:600; padding:8px 13px; border-radius:100px; box-shadow:0 4px 14px rgba(0,0,0,.08); cursor:pointer; font-family:-apple-system,sans-serif;">
+  🎤 Sunucu Görünümü
+</button>
+
+<!-- 1. COVER -->
+<section class="slide cover active" id="s1" data-notes="💡 Vurgu: Kısaca kendinizi ve ürünü tanıtın. Amaç: ilk saniyede güven vermek. Fazla teknik detaya girmeyin, bu bir açılış.
+
+❓ Olası soru: Bu tamamen yerli bir ürün mü?
+✅ Cevap: Evet, sıfırdan bizim tarafımızdan geliştirildi. Yapay zeka altyapısı dışında dışa bağımlılık yok.">
+  <div class="cover-decor" aria-hidden="true">
+    <span style="top:12%;left:8%;transform:rotate(-14deg);">✏️</span>
+    <span style="top:64%;left:12%;transform:rotate(10deg);">📐</span>
+    <span style="top:18%;right:10%;transform:rotate(12deg);">🧮</span>
+    <span style="top:62%;right:8%;transform:rotate(-8deg);">🎓</span>
+  </div>
+  <div class="slide-inner">
+    <svg class="cover-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="34" cy="30" r="25" fill="none" stroke="#fff" stroke-width="3" opacity="0.95"/>
+      <circle cx="34" cy="30" r="15.5" fill="none" stroke="#fff" stroke-width="3" opacity="0.7"/>
+      <path d="M6 58 L24 40" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M24 40 L24 32 L32 32 Z" fill="#fff"/>
+      <circle cx="34" cy="30" r="5.5" fill="#F5C451"/>
+    </svg>
+    <h1>hedefim<sup>LGS</sup></h1>
+    <p class="tagline">Yapay zekâ destekli, kurumsal ölçekte LGS sınav hazırlık sistemi</p>
+    <div class="for-line">Kurumsal Değerlendirme Sunumu</div>
+  </div>
+  <button class="scroll-cue" id="coverNext" style="background:none;border:none;cursor:pointer;"><span>İleri</span><span class="arrow">→</span></button>
+</section>
+
+<!-- 2. PROBLEM -->
+<section class="slide" id="s2" data-notes="💡 Vurgu: Karşınızdakinin 'evet, tam olarak bu' demesini hedefleyin. Kendi deneyiminizden bir anekdot ekleyin. Acele etmeyin, bu bağ kurma slaydı.
+
+❓ Olası soru: Bu sorunları zaten biliyoruz, siz nasıl farklısınız?
+✅ Cevap: Bilmek başka, çözmek başka — az sonra göstereceğimiz özelliklerin her biri bu sorunlardan birine doğrudan cevap veriyor.">
+  <div class="slide-inner">
+    <div class="kicker">Sektörün Zorluğu</div>
+    <h2>Bireysel takip, kurumsal ölçekte çöküyor</h2>
+    <p class="lead">Bir dershanenin en değerli varlığı — her öğrencinin nerede zayıf olduğunu bilmek — ölçek büyüdükçe elle yönetilemez hâle geliyor.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <span class="glyph">📞</span>
+        <h3>Veli iletişimi zaman yutuyor</h3>
+        <p>Her öğrencinin haftalık gelişimini velisine anlatmak, ayrı bir personel yükü hâline geliyor.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">📋</span>
+        <h3>Tek tip soru bankaları</h3>
+        <p>Genel sınavlar, öğrencinin asıl zayıf olduğu konuya değil, herkese aynı içeriğe odaklanıyor.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">🧑‍🏫</span>
+        <h3>Öğretmen görünürlüğü sınırlı</h3>
+        <p>Öğretmenler, sınıfın dışında öğrencinin gerçek zamanlı ilerlemesini takip edecek bir araçtan yoksun.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">📊</span>
+        <h3>Yönetim tablosu yok</h3>
+        <p>Şube müdürü, yüzlerce öğrenciyi tek tek incelemeden "kim geride kaldı" sorusuna cevap veremiyor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SOLUTION -->
+<section class="slide" id="s3" data-notes="💡 Vurgu: 6 kartı hızlı geçin, derinlik ekran görüntülerinde. 'Adım Adım Çözüm' ve 'Mini Ders' kartlarını özellikle vurgulayın — dershaneleri en çok etkileyen farklar bunlar.
+
+❓ Olası soru: Bunların hepsi gerçekten çalışıyor mu, yoksa planlanan mı?
+✅ Cevap: Hepsi bugün itibarıyla canlı ve kullanımda. 'Kurumsal Hazırlık' slaydında ayrıca hangilerinin canlı olduğunu işaretledik.">
+  <div class="slide-inner">
+    <div class="kicker">Çözüm</div>
+    <h2>Her öğrenci için kişisel, kurum için otomatik</h2>
+    <p class="lead">Hedefim LGS, yapay zekâyı öğrencinin zayıf konularına yönlendirir; veli iletişimini otomatikleştirir; gerçek sınav baskısını simüle eder.</p>
+    <div class="feature-row cols-3">
+      <div class="feature-card">
+        <span class="glyph">🎯</span>
+        <h3>Kişiselleştirilmiş Sorular</h3>
+        <p>Genel soru bankası değil — öğrencinin zayıf konusuna göre üretilen sorular.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📬</span>
+        <h3>Otomatik Veli Bildirimi</h3>
+        <p>Günlük özet, haftalık rapor ve sınav hatırlatmaları personel gerektirmeden gönderilir.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📝</span>
+        <h3>Gerçek Sınav Simülasyonu</h3>
+        <p>90 soru, 135 dakika — gerçek LGS formatında deneme sınavı ve net takibi.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">🧩</span>
+        <h3>Adım Adım Çözüm</h3>
+        <p>Yanlış yapılan her soruda sadece doğru cevap değil, çözüm yolu adım adım gösterilir.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📘</span>
+        <h3>Mini Ders / Konu Özeti</h3>
+        <p>Zayıf olduğu her konu için AI, kısa ve öğretici bir mini ders üretir — ek kaynağa gerek kalmaz.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">⚡</span>
+        <h3>Canlı, Kullanımda Ürün</h3>
+        <p>Mockup değil — bugün gerçek ailelerin kullandığı, çalışan bir sistem.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. SCREENSHOT: STEP-BY-STEP SOLUTION + MINI LESSON -->
+<section class="slide" id="s3shot0" data-notes="💡 Vurgu: Sunumun en güçlü slaytı. Kırmızı kalem notunu ('bak buraya...') özellikle işaret edin — bir öğretmenin defterine not düşmesi gibi hissettirir. Mini ders kartındaki 'ek kaynağa gerek yok' mesajını atlamayın.
+
+❓ Olası soru: Yapay zeka yanlış/eksik açıklama üretirse ne olur?
+✅ Cevap: Öğrenci sorunlu bulduğu her soruyu tek tıkla bildirebiliyor (🚩 butonu), bize düşüyor ve inceliyoruz. Ayrıca her soru MEB kazanım koduna bağlı üretiliyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Sadece doğru cevap değil — çözüm ve ders anlatımı</h2>
+    <p class="lead">Dershaneleri en çok ikna eden fark burada: öğrenci yanlış yaptığında neden yanlış yaptığını öğrenir, zayıf olduğu konuda AI ondan bir mini ders üretir.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/result</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>🧩 Yanlış Yapılan Soru — Çözüm</h5>
+              <div style="font-family:-apple-system,sans-serif; font-size:.72rem; color:#334155; background:#f8fafc; border-radius:10px; padding:10px 12px; margin-bottom:8px;">
+                Bir kenarı 12 cm olan kare şeklindeki bahçenin çevresine 30 cm'lik taşlar döşenecek. En az kaç taş gerekir?
+              </div>
+              <div style="display:flex; gap:8px; margin-bottom:10px;">
+                <span class="mock-badge badge-red">Senin Cevabın: A</span>
+                <span class="mock-badge badge-green">Doğru Cevap: B</span>
+              </div>
+              <p class="redpen-note">bak buraya, çevreyi taş uzunluğuna böl 👉</p>
+              <div style="font-family:-apple-system,sans-serif; font-size:.7rem; color:#475569; line-height:1.6; border-left:3px solid #a855f7; padding-left:10px;">
+                <b style="color:#334155;">Adım 1:</b> Bahçenin çevresi = 4 × 12 = 48 cm.<br/>
+                <b style="color:#334155;">Adım 2:</b> Taş sayısı = Çevre ÷ Taş uzunluğu = 48 ÷ 30 ≈ 1,6 → yuvarlarken taş sayısı köşelerde tekrar hesaplanır.<br/>
+                <b style="color:#334155;">Adım 3:</b> Doğru döşeme hesabıyla gereken taş sayısı 16'dır. Cevap: <b>B</b>.
+              </div>
+            </div>
+            <div class="mock-card">
+              <h5>📘 Mini Ders: Kesirlerle İşlemler</h5>
+              <div style="font-family:-apple-system,sans-serif; font-size:.7rem; color:#475569; line-height:1.6;">
+                Kesirlerde toplama ve çıkarma yapabilmek için paydaların eşit olması gerekir. Paydalar farklıysa önce paydaları eşitlemeliyiz (OKEK kullanarak)...
+              </div>
+              <div style="margin-top:8px;"><span class="mock-badge badge-purple">🧠 AI tarafından üretildi</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki soru ve içerik örnek amaçlıdır, gerçek AI çıktısından biri değildir.</p>
+  </div>
+</section>
+
+<!-- 4b. SCREENSHOT: PLACEMENT (SEVİYE TESPİT) RESULT -->
+<section class="slide" id="s3shotplacement" data-notes="💡 Vurgu: Kişiselleştirmenin başladığı ilk an — her yeni öğrenci sisteme girdiğinde bir seviye tespit sınavı çözer, sonuç sadece bir puan değil, ders ve konu bazlı bir döküme dönüşür. 'Desteğe İhtiyaç Duyduğu Konular' otomatik belirlenip hem panelde hem velinin mailinde gösterilir.
+
+❓ Olası soru: Bu sınav ne kadar sürüyor?
+✅ Cevap: Standart bir LGS denemesi kadar, ilk günde bir kez yapılıyor — sistemin öğrenciyi nereden başlatacağını bilmesi için gerekli.
+
+❓ Olası soru: Şubedeki tüm öğrenciler bunu yapmak zorunda mı?
+✅ Cevap: Evet, ilk girişte otomatik olarak karşılarına çıkıyor — kurumun ayrıca bir şey yapmasına gerek yok.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>İlk gün: seviye tespit sonucu, konu konu</h2>
+    <p class="lead">Her öğrenci sisteme ilk girdiğinde bir seviye tespit sınavı çözer; sonuç ders ve konu bazlı bir döküm olarak hem panelde hem de veliye giden mailde otomatik görünür.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">📊</div>
+            <h4>Seviye Tespit Sonucu</h4>
+            <p>Tahmini Puan: 348</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>🔢 Matematik</span><span style="font-weight:700; color:#dc2626;">%35</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;"><div style="width:35%; background:#ef4444; border-radius:100px; height:7px;"></div></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>🔬 Fen Bilimleri</span><span style="font-weight:700; color:#d97706;">%45</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;"><div style="width:45%; background:#f59e0b; border-radius:100px; height:7px;"></div></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>📖 Türkçe</span><span style="font-weight:700; color:#16a34a;">%60</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px;"><div style="width:60%; background:#22c55e; border-radius:100px; height:7px;"></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>📘 Desteğe İhtiyaç Duyduğu Konular</h5>
+              <div class="mock-row"><div class="name">Kesirlerle İşlemler <span class="sub">(Matematik)</span></div></div>
+              <div class="mock-row"><div class="name">Kuvvet ve Hareket <span class="sub">(Fen Bilimleri)</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 5. COMPARISON TABLE -->
+<section class="slide" id="s3compare" data-notes="💡 Vurgu: Rakip iddiası değil, kıyaslama davet edin. Kendi mevcut yöntemleriyle (Excel, genel soru bankası) karşılaştırmalarını isteyin.
+
+❓ Olası soru: Şu an kullandığımız [X] programından farkınız ne?
+✅ Cevap: X'i tanımadığımız için doğrudan kıyaslayamayız, ama elimizdeki bu tabloyu siz kendi ürününüzle doldurup karşılaştırabilirsiniz — objektif bir bakış açısı sunar.">
+  <div class="slide-inner">
+    <div class="kicker">Neden Hedefim LGS</div>
+    <h2>Excel takibi ve genel soru bankalarıyla kıyaslayın</h2>
+    <p class="lead">İddia değil, elimizdeki gerçek özellikler üzerinden bir kıyaslama — siz de kendi mevcut yönteminizle karşılaştırabilirsiniz.</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr><th>Özellik</th><th>Excel / Kağıt Takip</th><th>Genel Soru Bankası</th><th>Hedefim LGS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feature-name">Kişiselleştirilmiş soru üretimi</td><td class="check no">—</td><td class="check no">—</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Adım adım çözüm gösterimi</td><td class="check no">—</td><td class="check no">Bazen</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Otomatik veli bilgilendirmesi</td><td class="check no">—</td><td class="check no">—</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Öğretmen paneli (not, takip)</td><td class="check no">—</td><td class="check no">—</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Toplu öğrenci kaydı</td><td class="check yes">Elle, yavaş</td><td class="check no">—</td><td class="check yes">✓ Otomatik</td></tr>
+          <tr><td class="feature-name">Şube bazlı raporlama</td><td class="check no">Manuel</td><td class="check no">—</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Kurulum süresi</td><td class="check no">—</td><td class="check no">—</td><td class="check yes">Dakikalar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 6. INSTITUTIONAL READINESS -->
+<section class="slide" id="s4" data-notes="💡 Vurgu: Buradan itibaren 'bu bir demo değil, bugün kurumsal kullanıma hazır' mesajı verin. 'Canlı' etiketleri boşuna değil.
+
+❓ Olası soru: Bunlar gösterim amaçlı mockup mı?
+✅ Cevap: Hayır — 'Canlı' etiketli olanlar gerçekten production'da çalışıyor, birazdan ekran görüntülerini de göreceksiniz.">
+  <div class="slide-inner">
+    <div class="kicker">Kurumsal Hazırlık</div>
+    <h2>Bir dershane için özel olarak inşa edildi</h2>
+    <p class="lead">Çok şubeli, yüksek öğrenci sayılı bir kurumun ilk gün ihtiyaç duyacağı dört yetenek tamamlandı ve canlıda.</p>
+    <div class="check-list">
+      <div class="check-item">
+        <div class="icon">✓</div>
+        <div><h3>Toplu Öğrenci Kaydı</h3><p>Excel/CSV ile yüzlerce öğrenci tek seferde sisteme tanımlanır.</p></div>
+        <div class="tag">Canlı</div>
+      </div>
+      <div class="check-item">
+        <div class="icon">✓</div>
+        <div><h3>Şube Yönetimi</h3><p>Öğrenciler şubelere ayrılır, her şubenin verisi ayrı izlenir.</p></div>
+        <div class="tag">Canlı</div>
+      </div>
+      <div class="check-item">
+        <div class="icon">✓</div>
+        <div><h3>Öğretmen/Rehber Erişimi</h3><p>Öğretmenler kendi şubelerindeki öğrencinin performansını görür.</p></div>
+        <div class="tag">Canlı</div>
+      </div>
+      <div class="check-item">
+        <div class="icon">✓</div>
+        <div><h3>Yönetici Genel Bakış Ekranı</h3><p>Aktiflik oranı, ortalama net, geride kalan öğrenciler tek ekranda.</p></div>
+        <div class="tag">Canlı</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. SCREENSHOT: INSTITUTION ADMIN OVERVIEW -->
+<section class="slide" id="s4shot1" data-notes="💡 Vurgu: Sayılar temsili, belirtin. Bu, müdürün kendi kurum hesabıyla gördüğü ekran — hedefimlgs.com/kurum adresinden, kendi giriş bilgileriyle giriyor. Asıl mesaj: her sabah 2 dakikada 'kim geride kaldı' sorusuna cevap alabileceği tek bir ekran.
+
+❓ Olası soru: 1000+ öğrenciyle bu ekran yavaşlamaz mı?
+✅ Cevap: Sistem bunun için tasarlandı — sayılar özet/aggregate halinde geliyor, tek tek öğrenci kaydı taranmıyor.
+
+❓ Olası soru: Bu ekranı kim görüyor, sizin ekibiniz mi?
+✅ Cevap: Hayır — bu, dershanenin kendi kurum admin hesabı. Kendi şube/öğretmen/öğrenci verisini görüyor, başka bir kurumun verisine hiç erişimi yok.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Kurum yöneticisi genel bakış ekranı</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/kurum</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header">
+            <div class="emoji">🏢</div>
+            <h4>Kadıköy Dershanesi</h4>
+            <p>Kurum Paneli</p>
+          </div>
+          <div class="mock-stats" style="grid-template-columns:repeat(2,1fr);">
+            <div class="mock-stat"><b>1.248</b><span>ÖĞRENCİ</span></div>
+            <div class="mock-stat"><b>892</b><span>AİLE</span></div>
+            <div class="mock-stat" style="color:#15803d;"><b style="color:#15803d;">%64</b><span>7 GÜN AKTİFLİK</span></div>
+            <div class="mock-stat"><b style="color:#7e22ce;">51.8</b><span>ORT. NET</span></div>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <h5>⚠️ Geride Kalan Öğrenciler</h5>
+              <p class="hint">14+ gündür pasif olan veya zayıflık skoru yüksek öğrenciler</p>
+              <div class="mock-row"><div><div class="name">Elif Kaya</div><div class="sub">Yılmaz Ailesi · Kadıköy Şubesi</div></div><div class="right"><span class="mock-badge badge-red">19 gün pasif</span></div></div>
+              <div class="mock-row"><div><div class="name">Mert Şahin</div><div class="sub">Şahin Ailesi · Ümraniye Şubesi</div></div><div class="right"><span class="mock-badge badge-red">16 gün pasif</span></div></div>
+              <div class="mock-row"><div><div class="name">Zeynep Demir</div><div class="sub">Demir Ailesi · Beşiktaş Şubesi</div></div><div class="right"><span class="mock-badge badge-orange">Zayıflık: 71</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 8. SCREENSHOT: INSTITUTION BULK IMPORT + BRANCHES -->
+<section class="slide" id="s4shot3" data-notes="💡 Vurgu: CSV akışını anlatın. Şifrelerin artık opsiyonel/otomatik olduğunu, indirilebilir listeyle sunulduğunu vurgulayın. Bu ekranı da kurumun kendi admini kullanıyor — bizim ekibimizin CSV yüklemesi gerekmiyor.
+
+❓ Olası soru: 500 öğrenciyi yüklemek ne kadar sürer?
+✅ Cevap: Dakikalar — CSV'yi hazırlayıp yüklüyorsunuz, şifreler otomatik üretilip size indirilebilir bir liste olarak veriliyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Toplu kayıt &amp; şube yönetimi — kurum panelinizden</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/kurum</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header">
+            <div class="emoji">📥</div>
+            <h4>Toplu Kayıt</h4>
+            <p>CSV ile onlarca öğrenciyi tek seferde ekle</p>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <div class="mock-upload">
+                <div class="icon">📄</div>
+                <p><b style="color:#334155;">ogrenciler_kadikoy.csv</b><br/>87 satır algılandı</p>
+              </div>
+              <div class="mock-btn">📥 87 Satırı Yükle</div>
+            </div>
+            <div class="mock-card">
+              <h5>🏢 Şubeler</h5>
+              <div class="mock-row"><div class="name">Kadıköy Şubesi</div><div class="right sub">👨‍👩‍👧 128 aile · 🎓 142 öğrenci</div></div>
+              <div class="mock-row"><div class="name">Ümraniye Şubesi</div><div class="right sub">👨‍👩‍👧 96 aile · 🎓 104 öğrenci</div></div>
+              <div class="mock-row"><div class="name">Beşiktaş Şubesi</div><div class="right sub">👨‍👩‍👧 71 aile · 🎓 79 öğrenci</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 9. SCREENSHOT: INSTITUTION TEACHER MANAGEMENT -->
+<section class="slide" id="s4shot3b" data-notes="💡 Vurgu: Öğretmen hesabı açmanın saniyeler sürdüğünü, şube atamasının zorunlu olduğunu (kurum sadece kendi şubelerine öğretmen atayabiliyor) vurgulayın.
+
+❓ Olası soru: Öğretmenler birden fazla şubede ders veriyorsa ne olur?
+✅ Cevap: Şu an bir öğretmen tek bir şubeye atanıyor — birden fazla şube ataması ihtiyaç olursa değerlendirilebilir.
+
+❓ Olası soru: Bir öğretmen başka bir dershanenin (kurumun) verisine erişebilir mi?
+✅ Cevap: Hayır — öğretmen hesapları da kurum bazlı, sadece kendi kurumunuzun şubelerine atanabiliyor, kurumlar arası hiç veri paylaşımı yok.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğretmen hesabı yönetimi — kurum panelinizden</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/kurum</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header">
+            <div class="emoji">🧑‍🏫</div>
+            <h4>Yeni Öğretmen Hesabı</h4>
+            <p>Şube ataması ile birlikte saniyeler içinde açılır</p>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <div class="mock-input">Ayşe Öğretmen</div>
+              <div class="mock-input">ayse.ogretmen@kadikoy.com</div>
+              <div class="mock-input">••••••••</div>
+              <div class="mock-input">🏢 Kadıköy Şubesi</div>
+              <div class="mock-btn">Hesap Oluştur</div>
+            </div>
+            <div class="mock-card">
+              <h5>Mevcut Öğretmenler</h5>
+              <div class="mock-row"><div><div class="name">Ayşe Öğretmen</div><div class="sub">ayse.ogretmen@kadikoy.com</div></div><div class="right"><span class="mock-badge badge-indigo">Kadıköy Şubesi</span></div></div>
+              <div class="mock-row"><div><div class="name">Murat Kaya</div><div class="sub">murat.kaya@umraniye.com</div></div><div class="right"><span class="mock-badge badge-indigo">Ümraniye Şubesi</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve bilgiler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 10. FLOW -->
+<section class="slide" id="s5" data-notes="💡 Vurgu: Kurulumun basitliğini özetleyin — bu genelde 'benim IT ekibim yok' endişesini gideriyor.
+
+❓ Olası soru: Kurulum için bize teknik bir kişi mi gerekiyor?
+✅ Cevap: Hayır, tüm adımlar admin panelinden, teknik bilgi gerektirmeden yapılıyor.">
+  <div class="slide-inner">
+    <div class="kicker">Nasıl Çalışır</div>
+    <h2>Kurulumdan takibe, dört adım</h2>
+    <p class="lead">Kurum bilgi işlem departmanına ihtiyaç duymadan, kısa sürede devreye alınır.</p>
+    <div class="flow">
+      <div class="flow-step"><span class="num">1</span><h3>Toplu Yükleme</h3><p>Öğrenci listesi CSV ile tek seferde sisteme aktarılır.</p></div>
+      <div class="flow-step"><span class="num">2</span><h3>Şubelere Ayırma</h3><p>Öğrenciler otomatik olarak ilgili şubeye atanır.</p></div>
+      <div class="flow-step"><span class="num">3</span><h3>Öğretmen Takibi</h3><p>Öğretmenler kendi şubesindeki öğrenciyi anlık izler.</p></div>
+      <div class="flow-step"><span class="num">4</span><h3>Yönetim Görünürlüğü</h3><p>Müdür, tüm kurumu tek ekrandan yönetir.</p></div>
+    </div>
+    <div class="trust-note" style="margin-top:22px;">
+      <p>🖥️ <b>Sıfır Altyapı Yatırımı:</b> Sunucu, hosting, veritabanı, IT personeli ya da geliştirici tutmanıza gerek yok. Kurumunuza özel giriş bilgileriyle <b>hedefimlgs.com/kurum</b> adresinden giriyorsunuz — tüm altyapı, bakım ve yapay zekâ maliyeti bizde kalıyor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11. STAFF TIME SAVINGS -->
+<section class="slide" id="s6staff" data-notes="💡 Vurgu: Somut örneği kullanın: 300 öğrencide haftada 25 saatlik iş yükü. Bunu 'zaman tasarrufu' çerçevesinde anlatın — 'kaç öğrenci geliri karşılar' gibi bir hesaba KESİNLİKLE GİRMEYİN, bu denendi ve 'gelirimi bu sisteme mi veriyorum' hissi yarattığı için kaldırıldı.
+
+❓ Olası soru: Bu bize ne kadara mal olacak?
+✅ Cevap: Fiyatlandırma ayrı bir görüşme konusu — 'önce ürünün değerini görelim, fiyatı ayrıca konuşalım' diyerek erteleyin. Burada rakam vermeyin.">
+  <div class="slide-inner">
+    <div class="kicker">Personel Tasarrufu</div>
+    <h2>Bir personelin haftalarca süren işini otomatikleştirir</h2>
+    <p class="lead">Veli iletişimi, bir dershanenin en çok zaman ve personel yiyen işlerinden biridir. Bu sistemde tamamen otomatik.</p>
+    <div class="feature-row cols-3">
+      <div class="feature-card">
+        <span class="glyph">📅</span>
+        <h3>Günlük Özet</h3>
+        <p>Her akşam 21:00'da, o gün çalışılanların özeti otomatik gönderilir — elle yazılan tek bir mail yok.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📈</span>
+        <h3>Haftalık Rapor</h3>
+        <p>Her Pazar, konu bazlı gelişim analizi otomatik hazırlanıp gönderilir.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">⏰</span>
+        <h3>Sınav Hatırlatması</h3>
+        <p>Deneme sınavından bir gün önce otomatik hatırlatma — kimse telefonla aramak zorunda kalmaz.</p>
+      </div>
+    </div>
+    <div class="trust-note">
+      <span class="glyph">🧮</span>
+      <p><b>Basit bir mantık:</b> 300 öğrencili bir dershanede her öğrenciye haftada sadece 5 dakikalık bir veli güncellemesi bile, haftada 25 saatlik bir iş yükü demektir. Bu sistemde bu iş, hiç personel harcamadan otomatik yapılır.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12. TEACHER SCREEN -->
+<section class="slide" id="s4b" data-notes="💡 Vurgu: Öğretmenlere bunu nasıl sunacağınızı düşünün. Güven notunu ('bu bir denetim aracı değil') mutlaka okuyun/vurgulayın.
+
+❓ Olası soru (öğretmenden gelebilir): Bu beni denetlemek için mi?
+✅ Cevap: Hayır — öğretmenin giriş sıklığı/kullanım süresi yönetime hiç raporlanmıyor. Bu bir yardımcı araç, denetim aracı değil.">
+  <div class="slide-inner">
+    <div class="kicker">Yakından Bakış</div>
+    <h2>Öğretmen ekranı: izlemekle kalmıyor, aksiyon aldırıyor</h2>
+    <p class="lead">Öğretmenler kendi ekranlarından, hangi öğrenciyle neden ilgilenmeleri gerektiğini görüyor — ve bunu takip edip not düşebiliyor.</p>
+    <div class="feature-row cols-3">
+      <div class="feature-card">
+        <span class="glyph">🔍</span>
+        <h3>Arama &amp; Sıralama</h3>
+        <p>Öğrenciyi ismiyle bulur, nete veya pasiflik süresine göre sıralar.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">🎯</span>
+        <h3>Konu Bazlı Zayıflık</h3>
+        <p>"Kim geride kaldı" değil, "hangi konuda geride kaldı" sorusuna cevap verir.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📈</span>
+        <h3>Deneme Neti Trendi</h3>
+        <p>Son sınavların net grafiği ile öğrencinin ilerleyip ilerlemediği tek bakışta görünür.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📝</span>
+        <h3>Öğrenciye Not Bırakma</h3>
+        <p>Öğretmen bir öğrenciyle ilgili gözlemini kaydeder, geçmiş notlar herkese açık kalır.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📊</span>
+        <h3>Sınıf Konu Özeti</h3>
+        <p>Bireysel değil, sınıfın tamamının en çok zorlandığı konuları gösterir — ders planına doğrudan girdi olur.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">📬</span>
+        <h3>Haftalık Özet Maili</h3>
+        <p>Her Pazar, sınıfın durumu otomatik olarak öğretmenin e-postasına düşer — sisteme girmeye bile gerek kalmaz.</p>
+      </div>
+    </div>
+    <div class="trust-note">
+      <span class="glyph">🛡️</span>
+      <p><b>Öğretmenler için önemli:</b> Sistem öğretmenin performansını değil, öğrencinin ihtiyacını takip eder. Öğretmenin giriş sıklığı, kullanım süresi gibi hiçbir aktivitesi yönetime raporlanmaz — bu bir denetim aracı değil, bir yardımcıdır.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13. SCREENSHOT: TEACHER SCREEN -->
+<section class="slide" id="s4shot2" data-notes="💡 Vurgu: Gerçek arayüzün birebir kopyası. Arama/sıralama ve konu bazlı zayıflık dökümünü öne çıkarın, 'kim' değil 'hangi konuda' geride kaldı farkını vurgulayın.
+
+❓ Olası soru: Bir öğretmen kaç öğrenciye kadar rahat yönetebilir?
+✅ Cevap: Arama ve sıralama özellikleri büyük gruplarda da (30-40+ öğrenci) hızlı gezinmeyi sağlıyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğretmen ekranı</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/ogretmen</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">🧑‍🏫</div>
+            <h4>Ayşe Öğretmen</h4>
+            <p>Kadıköy Şubesi</p>
+          </div>
+          <div class="mock-stats">
+            <div class="mock-stat"><b>34</b><span>ÖĞRENCİ</span></div>
+            <div class="mock-stat"><b style="color:#15803d;">%71</b><span>7 GÜN AKTİFLİK</span></div>
+            <div class="mock-stat"><b style="color:#7e22ce;">58.4</b><span>ORT. NET</span></div>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <h5>🎯 Sınıfın En Zayıf Konuları</h5>
+              <div class="mock-row"><div class="name">🔢 Kesirlerle İşlemler <span class="sub">(Matematik)</span></div><div class="right"><span class="mock-badge badge-red">78</span></div></div>
+              <div class="mock-row"><div class="name">📖 Fiilimsiler <span class="sub">(Türkçe)</span></div><div class="right"><span class="mock-badge badge-red">69</span></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>Öğrenciler</h5>
+              <div class="mock-row"><div><div class="name">Can Öztürk</div><div class="sub">Öztürk Ailesi</div></div><div class="right"><span class="badge-purple mock-badge">Net: 62</span> <span class="mock-badge badge-green">3 gün</span></div></div>
+              <div class="mock-row"><div><div class="name">Ela Aydın</div><div class="sub">Aydın Ailesi</div></div><div class="right"><span class="badge-purple mock-badge">Net: 45</span> <span class="mock-badge badge-orange">9 gün</span></div></div>
+              <div class="mock-row"><div><div class="name">Berk Yıldız</div><div class="sub">Yıldız Ailesi</div></div><div class="right"><span class="badge-purple mock-badge">Net: 71</span> <span class="mock-badge badge-green">1 gün</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 14. SCREENSHOT: STUDENT DETAIL PANEL -->
+<section class="slide" id="s4shot2b" data-notes="💡 Vurgu: Net trend grafiğinin ve zayıf konu dökümünün öğretmenin günlük işini nasıl kolaylaştırdığını anlatın — bir öğrenciye tıklayınca saniyeler içinde tüm resmi görüyor.
+
+❓ Olası soru: Bu veriler ne sıklıkla güncelleniyor?
+✅ Cevap: Her sınav tamamlandığı anda anlık güncelleniyor, gecikme yok.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğretmen: öğrenci detay paneli</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/ogretmen</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                <div>
+                  <div style="font-family:-apple-system,sans-serif; font-weight:800; font-size:.86rem; color:#1e293b;">Can Öztürk</div>
+                  <div class="sub">Öztürk Ailesi · Kadıköy Şubesi</div>
+                </div>
+                <span class="mock-badge" style="background:#f1f5f9; color:#64748b;">Kapat</span>
+              </div>
+              <h5 style="text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; font-size:.62rem;">Deneme Neti Trendi</h5>
+              <div class="mock-bars">
+                <div class="mock-bar" style="height:32%;"></div>
+                <div class="mock-bar" style="height:44%;"></div>
+                <div class="mock-bar" style="height:50%;"></div>
+                <div class="mock-bar" style="height:58%;"></div>
+                <div class="mock-bar" style="height:68%;"></div>
+                <div class="mock-bar" style="height:78%;"></div>
+              </div>
+              <div style="display:flex; gap:6px; margin-bottom:10px;">
+                <div class="mock-bar-label" style="flex:1;">38</div>
+                <div class="mock-bar-label" style="flex:1;">42</div>
+                <div class="mock-bar-label" style="flex:1;">47</div>
+                <div class="mock-bar-label" style="flex:1;">51</div>
+                <div class="mock-bar-label" style="flex:1;">58</div>
+                <div class="mock-bar-label" style="flex:1;">62</div>
+              </div>
+              <h5 style="text-transform:uppercase; letter-spacing:.05em; color:#94a3b8; font-size:.62rem;">Zayıf Konular</h5>
+              <div class="mock-row"><div class="name">🔢 Kesirlerle İşlemler <span class="sub">(Matematik)</span></div><div class="right"><span class="mock-badge badge-red">74</span></div></div>
+              <div class="mock-row"><div class="name">🔬 Kuvvet ve Enerji <span class="sub">(Fen Bilimleri)</span></div><div class="right"><span class="mock-badge badge-red">65</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 15. SCREENSHOT: NOTE VISIBILITY -->
+<section class="slide" id="s4shot2c" data-notes="💡 Vurgu: 3 seviyeli görünürlük öğretmene kontrol veriyor — 'her yazdığım şey herkese gidiyor' endişesini gideren somut bir cevap.
+
+❓ Olası soru: Bir öğretmen yanlışlıkla veliye not gönderirse?
+✅ Cevap: Görünürlük her not için ayrı seçiliyor, kaydetmeden önce net şekilde görünüyor — yanlış paylaşım riski düşük.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğretmen notu: kimler görsün?</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/ogretmen</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>Notlar</h5>
+              <div class="mock-input mock-textarea">Can son iki haftada kesirler konusunda belirgin ilerleme kaydetti, deneme sınavlarına devam etmesini öneriyorum.</div>
+              <div class="mock-visibility">
+                <div class="mock-visibility-opt"><span class="dot"></span> 🔒 Sadece ben</div>
+                <div class="mock-visibility-opt selected"><span class="dot"></span> 🧑‍🏫 Tüm öğretmenler</div>
+                <div class="mock-visibility-opt"><span class="dot"></span> 👨‍👩‍👧 Veli de görsün</div>
+              </div>
+              <div class="mock-btn">Notu Kaydet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve içerikler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 16. SCREENSHOT: PARENT PANEL -->
+<section class="slide" id="s4shot4" data-notes="💡 Vurgu: Veli tarafına geçiş — 'öğretmenin bıraktığı not, veli isterse görebiliyor'. Bu şeffaflık, velinin dershaneye güvenini artıran somut bir örnek.
+
+❓ Olası soru: Veli bu notlara cevap yazabiliyor mu?
+✅ Cevap: Şu an tek yönlü — veli notu görüyor ama yanıt yazamıyor. Bu, ileride eklenebilecek bir gelişme olarak not edilebilir.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Veli paneli: öğretmen notu görünürlüğü</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">👨‍👩‍👧</div>
+            <h4>Elif Yılmaz</h4>
+            <p>Veli Paneli</p>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <h5>🧑‍🏫 Öğretmen Notları</h5>
+              <div style="background:#f3e8ff; border-radius:10px; padding:9px 11px; font-family:-apple-system,sans-serif;">
+                <div style="font-size:.74rem; color:#334155;">Ali son iki haftada kesirler konusunda belirgin ilerleme kaydetti, deneme sınavlarına devam etmesini öneriyorum.</div>
+                <div style="font-size:.6rem; color:#94a3b8; margin-top:5px;">Ayşe Öğretmen · 14.07.2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 17. SCREENSHOT: PARENT NOTIFICATION PREFS + WRONG QUESTIONS -->
+<section class="slide" id="s4shot4b" data-notes="💡 Vurgu: 'Veli hiçbir şeyi takip etmek zorunda değil' — bildirim tercihlerini kendisi seçiyor. Deneme sonrası yanlış/boş soruları çözümüyle inceleyebilmesi önemli bir detay, atlamayın.
+
+❓ Olası soru: Veli bildirimleri kapatırsa çocuğunun durumunu hiç göremez mi?
+✅ Cevap: Hayır, göremez demek doğru değil — istediği zaman panele girip tüm veriyi görebiliyor, sadece otomatik mail akışı duruyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Veli hiçbir şeyi takip etmek zorunda değil</h2>
+    <p class="lead">Hangi bildirimi almak istediğini kendisi seçer; deneme sonrası yanlış ve boş sorular, çözümüyle birlikte incelenebilir.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>✉️ Bildirim Tercihleri</h5>
+              <div class="mock-row"><div class="name">📚 Günlük Sınav Tamamlandı</div><div class="right"><span class="mock-badge badge-green">Açık</span></div></div>
+              <div class="mock-row"><div class="name">📈 Haftalık Gelişim Raporu</div><div class="right"><span class="mock-badge badge-green">Açık</span></div></div>
+              <div class="mock-row"><div class="name">⏰ Deneme Sınavı Hatırlatması</div><div class="right"><span class="mock-badge" style="background:#f1f5f9; color:#94a3b8;">Kapalı</span></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>🧾 Deneme Sonrası: Yanlış / Boş Sorular</h5>
+              <div class="mock-row"><div class="name">Soru 12 — Kesirlerle İşlemler ✗</div><div class="right"><span class="mock-badge badge-purple">Çözümü Gör</span></div></div>
+              <div class="mock-row"><div class="name">Soru 47 — Fiilimsiler (boş) ⬜</div><div class="right"><span class="mock-badge badge-purple">Çözümü Gör</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve içerikler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 17b. SCREENSHOT: TARGET SCHOOL + DIFFICULTY LEVEL -->
+<section class="slide" id="s4shottarget" data-notes="💡 Vurgu: Zorluk seviyesi kontrolünün veliye verildiğini, öğrenciye bırakılmadığını mutlaka belirtin (öğrenci hep 'kolay' seçer kaygısı). Hedef okul takibi, velinin girdiği hedefe göre öğrencinin nerede olduğunu gösteriyor.
+
+❓ Olası soru: Hedef okulun taban puanını nereden bulacağız?
+✅ Cevap: Veli MEB'in resmi taban puan tablolarından veya bildiği bir kaynaktan puanı kendisi girer, sistem bunu deneme sonuçlarıyla kıyaslar.
+
+❓ Olası soru: Zorluk seviyesini ne zaman artırmayı öneriyorsunuz?
+✅ Cevap: Öğrencinin son 5 sınavının ortalama başarısı %85'i geçtiğinde sistem otomatik olarak veliye öneri gösteriyor — rastgele değil, veri destekli bir eşik.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Veli kontrolünde: hedef okul takibi &amp; zorluk seviyesi</h2>
+    <p class="lead">Veli hedef okulunu ve gerekli puanı girer, sistem deneme sonuçlarıyla kıyaslar; sorularının zorluk seviyesini de yine veli belirler, öğrenciye bırakılmaz.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">👨‍👩‍👧</div>
+            <h4>Elif Yılmaz</h4>
+            <p>Veli Paneli</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>🏫 Hedef Okul</h5>
+              <div style="display:flex; align-items:center; justify-content:space-between; font-family:-apple-system,sans-serif;">
+                <span style="font-size:.76rem; font-weight:800; color:#334155;">Beykoz Fen Lisesi</span>
+                <span class="mock-badge badge-purple">Düzenle</span>
+              </div>
+              <div style="display:flex; gap:16px; margin-top:8px; font-family:-apple-system,sans-serif;">
+                <div style="font-size:.68rem; color:#64748b;">Gerekli Puan: <b style="color:#334155;">440</b></div>
+                <div style="font-size:.68rem; color:#16a34a; font-weight:700;">+18 üstünde</div>
+              </div>
+            </div>
+            <div class="mock-card">
+              <h5>🎚️ Soru Zorluk Seviyesi</h5>
+              <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:9px; padding:8px 10px; margin-bottom:8px; font-family:-apple-system,sans-serif;">
+                <div style="font-size:.66rem; color:#92400e;">💡 Elif son sınavlarında yüksek başarı gösteriyor. Zorluk seviyesini artırmakta fayda görüyoruz.</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <div style="flex:1; text-align:center; background:#f1f5f9; color:#64748b; border-radius:9px; padding:8px; font-family:-apple-system,sans-serif; font-size:.7rem; font-weight:700;">Standart</div>
+                <div style="flex:1; text-align:center; background:#7c3aed; color:#fff; border-radius:9px; padding:8px; font-family:-apple-system,sans-serif; font-size:.7rem; font-weight:700;">Zorlayıcı</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 18. SCREENSHOT: PARENT EMAILS (3 mails) -->
+<section class="slide" id="s4shotmail" data-notes="💡 Vurgu: Personel Tasarrufu slaydına doğal bir referans noktası — üçü de tamamen otomatik gidiyor, kimse elle yazmıyor. Günlük özet aynı dersten birden fazla oturum varsa hepsini tek kartta topluyor. Haftalık rapor geçen haftaya göre kıyaslama ve hedef okul ilerlemesi gösteriyor. Deneme hatırlatması saat penceresini, katılım durumunu ve zayıf konudaki değişimi (🔁 kronik / 🆕 yeni) gösteriyor.
+
+❓ Olası soru: Bu mailler spam'e düşer mi?
+✅ Cevap: Kurumsal mail altyapısından (bilgi@hedefimlgs.com) gönderiliyor — kurumsal lisansta kendi mail adresinizden gönderim de ayrıca konuşulabilir.
+
+❓ Olası soru: Veli bu maillerin hepsini almak zorunda mı?
+✅ Cevap: Hayır — her biri veli panelinden ayrı ayrı açılıp kapatılabiliyor, tercihi tamamen veliye ait.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Veliye giden mailler</h2>
+    <p class="lead">Üç farklı otomatik mail, veliyi hiçbir personel harcamadan bilgilendiriyor.</p>
+    <div class="mail-row">
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">📅 Ali Umut — Bugünkü Çalışma Özeti</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">📅 Günlük Özet</p>
+          <div style="background:#f5f3ff; border-radius:10px; padding:10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-weight:800; font-size:.68rem; color:#1f2937; margin-bottom:6px;">🔢 Matematik <span style="font-weight:400; color:#94a3b8;">· 2 oturum</span></div>
+            <div style="text-align:center; font-family:-apple-system,sans-serif; font-size:.78rem; font-weight:900; color:#7c3aed; margin-bottom:4px;">%68 Başarı</div>
+            <div style="text-align:center;"><span class="mock-badge" style="background:#dcfce7; color:#15803d;">▲ +3.7 net</span></div>
+          </div>
+          <div style="background:#fef2f2; border-radius:10px; padding:8px 10px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#dc2626; margin-bottom:4px;">📘 Desteğe İhtiyaç Duyduğu Konular</div>
+            <ul style="margin:0; padding-left:14px; font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+              <li>Kesirlerle İşlemler</li>
+              <li>Üslü İfadeler</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">📈 Elif Yılmaz — Haftalık Gelişim</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">📈 Haftalık Gelişim Raporu</p>
+          <div style="background:#f1ebfd; border-radius:10px; padding:10px; margin-bottom:8px; text-align:center;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.6rem; color:#6b6478;">🏆 Bu Haftaki Deneme</div>
+            <div style="font-family:Georgia,serif; font-size:1.25rem; font-weight:900; color:#7c3aed;">421.7</div>
+            <span class="mock-badge" style="background:#dcfce7; color:#15803d;">▲ +9 puan</span>
+          </div>
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:8px 10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#1d4ed8;">🎯 Hedef Okula Göre Durum</div>
+            <div style="background:#dbeafe; border-radius:100px; height:6px; margin:5px 0 3px; overflow:hidden;"><div style="background:#2563eb; height:100%; width:96%;"></div></div>
+            <div style="font-family:-apple-system,sans-serif; font-size:.58rem; color:#1d4ed8; font-weight:700;">Hedefine 18.3 puan kaldı</div>
+          </div>
+          <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#dc2626; margin-bottom:4px;">📘 Gelişmesi Gereken Konular</div>
+          <ul style="margin:0; padding-left:14px; font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+            <li>Kesirlerle İşlemler</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">⏰ Ali Umut — Yarın Deneme Var</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">⏰ Yarın Deneme Sınavı Var</p>
+          <div style="background:#f5f3ff; border-radius:10px; padding:8px 10px; margin-bottom:8px; font-family:-apple-system,sans-serif; font-size:.6rem; color:#6b7280;">
+            🕐 Sınav 10:00–19:00 arası aktif
+          </div>
+          <div style="text-align:center; margin-bottom:8px;">
+            <span style="display:inline-block; background:#7c3aed; color:#fff; font-weight:700; font-size:.6rem; padding:6px 14px; border-radius:100px;">🚀 Panele Git</span>
+          </div>
+          <div style="background:#eef2ff; border-radius:10px; padding:8px 10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#4338ca;">📆 Katılım Durumu</div>
+            <div style="font-family:-apple-system,sans-serif; font-size:.6rem; color:#374151; margin-top:2px;">Son 4 denemeden 3'üne katıldı</div>
+          </div>
+          <div style="font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+            Kesirlerle İşlemler <span style="background:#fde68a; color:#92400e; font-size:.52rem; font-weight:700; padding:1px 5px; border-radius:5px;">🔁 3 hafta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 19. SCREENSHOT: STUDENT EXAM -->
+<section class="slide" id="s3shot" data-notes="💡 Vurgu: Öğrenci tarafına geçiş. Gerçek LGS formatı — 90 soru, 135 dakika. 'Sınav günü şoku yaşamasın diye' diyebilirsiniz.
+
+❓ Olası soru: Sorular her öğrenci için farklı mı, yoksa sabit bir havuzdan mı geliyor?
+✅ Cevap: Öğrencinin zayıf olduğu konulara göre kişiselleştirilmiş üretiliyor, sabit bir soru bankası değil.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğrenci: gerçek sınav deneyimi</h2>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/mock-exam</span>
+        </div>
+        <div class="mock-body" style="max-height:none;">
+          <div class="exam-topbar">
+            <span class="q-count">Soru 24 / 90</span>
+            <span class="timer">⏱ 01:42:18</span>
+          </div>
+          <div class="exam-progress"><div class="exam-progress-fill"></div></div>
+          <div class="exam-question">
+            <div class="qtext">Bir kenarı 12 cm olan kare şeklindeki bir bahçenin çevresine, kenarları 30 cm olan kare şeklinde taşlar döşenecektir. Buna göre bahçenin çevresi boyunca en az kaç taş kullanılır?</div>
+            <div class="exam-option"><span class="letter">A</span> 12</div>
+            <div class="exam-option selected"><span class="letter">B</span> 16</div>
+            <div class="exam-option"><span class="letter">C</span> 20</div>
+            <div class="exam-option"><span class="letter">D</span> 24</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Soru içeriği örnek amaçlıdır, gerçek AI tarafından üretilen sorulardan biri değildir.</p>
+  </div>
+</section>
+
+<!-- 19b. SCREENSHOT: TOPIC MASTERY MAP -->
+<section class="slide" id="s3shottopicmap" data-notes="💡 Vurgu: 'Kişiselleştirilmiş öğrenme' iddiasını somut bir görsele bağlayan slayt. Renk kodları öğrencinin kendi ilerlemesini bir bakışta görmesini sağlıyor — konu bazlı çalışma planının temeli bu harita.
+
+❓ Olası soru: Bu veriler nasıl güncelleniyor, öğretmen mi giriyor?
+✅ Cevap: Hayır, tamamen otomatik — öğrenci her soru çözdüğünde ilgili konunun hakimiyet yüzdesi anında güncelleniyor. Öğretmenin veya velinin elle bir şey girmesi gerekmiyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Öğrenci: konu bazlı ilerleme haritası</h2>
+    <p class="lead">Hangi konuda güçlü, hangisinde zayıf olduğunu tek bakışta görüyor — çalışma planı bu haritaya göre otomatik şekilleniyor.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/topic-map</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">🗺️</div>
+            <h4>Konu Haritan</h4>
+            <p>Matematik</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <div style="font-family:-apple-system,sans-serif; font-size:.72rem; color:#334155; font-weight:800; margin-bottom:10px;">🔢 Matematik <span style="color:#94a3b8; font-weight:400;">— Ortalama hakimiyet: %64</span></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>Tam Sayılarla İşlemler</span><span style="font-weight:700; color:#16a34a;">%82</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;"><div style="width:82%; background:#22c55e; border-radius:100px; height:7px;"></div></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>Oran ve Orantı</span><span style="font-weight:700; color:#d97706;">%55</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;"><div style="width:55%; background:#f59e0b; border-radius:100px; height:7px;"></div></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;"><span>Kesirlerle İşlemler</span><span style="font-weight:700; color:#dc2626;">%28</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;"><div style="width:28%; background:#ef4444; border-radius:100px; height:7px;"></div></div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.68rem; color:#94a3b8; display:flex; justify-content:space-between; margin-bottom:3px;"><span>Cebirsel İfadeler</span><span style="font-weight:700;">Denenmedi</span></div>
+              <div style="background:#f1f5f9; border-radius:100px; height:7px;"><div style="width:8%; background:#e2e8f0; border-radius:100px; height:7px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve yüzdeler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 20. SCREENSHOT: STREAK + BADGES + LEADERBOARD -->
+<section class="slide" id="s3shotgami" data-notes="💡 Vurgu: Bu motivasyon katmanı üç farklı öğrenci profili analizinden çıktı (çalışkan/kararsız/isteksiz). Seri, rozetler ve isimsiz sıralama özellikle 'orta hâlli, kararsız' öğrenciyi sisteme bağlı tutmak için eklendi. İsimsiz sıralamada kimlik hiç görünmüyor, havuz küçükken (örn. şube bazında 5'ten az) hiç gösterilmiyor.
+
+❓ Olası soru: Bu oyunlaştırma öğrencinin dikkatini dersten kaydırmaz mı?
+✅ Cevap: Hayır — rozetler ve seri tamamen çalışma davranışına bağlı (gün atlamadan çalışma, sınav tamamlama). Ayrı bir eğlence oyunu değil, çalışmayı ödüllendiren bir katman.
+
+❓ Olası soru: Öğrenciler birbirini bulup rekabete girer mi, kötü hissettirir mi?
+✅ Cevap: İsim hiç gösterilmiyor, sadece 'kaçıncı sıradasın' bilgisi var — kimlik ifşası riski yok.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Motivasyon: çalışma serisi, rozetler &amp; isimsiz sıralama</h2>
+    <p class="lead">Sadece isteyerek değil, çalıştıkça kazandığı rozetlerle ve kimliği hiç açığa çıkmadan diğer öğrencilerle kıyaslanarak sisteme bağlı kalan bir öğrenci deneyimi.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header">
+            <div class="emoji">👋</div>
+            <h4>Merhaba, Can!</h4>
+            <p>Bugün hangi dersi çalışıyoruz?</p>
+            <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.15); border-radius:100px; padding:5px 12px; margin-top:8px;">
+              <span style="font-size:.9rem;">🔥</span>
+              <span style="font-family:-apple-system,sans-serif; font-size:.68rem; font-weight:800;">6 gün seri</span>
+            </div>
+          </div>
+          <div class="mock-section">
+            <div class="mock-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <h5 style="margin:0;">🏆 Başarılarım</h5>
+                <span style="font-family:-apple-system,sans-serif; font-size:.66rem; color:#94a3b8;">4/7</span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px;">
+                <div style="background:#fff; border:1px solid #f3e8ff; border-radius:12px; padding:8px 4px; text-align:center;"><div style="font-size:1.3rem;">🎯</div><div style="font-family:-apple-system,sans-serif; font-size:.55rem; font-weight:700; color:#334155; margin-top:2px;">İlk Adım</div></div>
+                <div style="background:#fff; border:1px solid #f3e8ff; border-radius:12px; padding:8px 4px; text-align:center;"><div style="font-size:1.3rem;">🔥</div><div style="font-family:-apple-system,sans-serif; font-size:.55rem; font-weight:700; color:#334155; margin-top:2px;">Isınma Turu</div></div>
+                <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:12px; padding:8px 4px; text-align:center; opacity:.45;"><div style="font-size:1.3rem; filter:grayscale(1);">💪</div><div style="font-family:-apple-system,sans-serif; font-size:.55rem; font-weight:700; color:#94a3b8; margin-top:2px;">Kararlılık</div></div>
+                <div style="background:#fff; border:1px solid #f3e8ff; border-radius:12px; padding:8px 4px; text-align:center;"><div style="font-size:1.3rem;">🏆</div><div style="font-family:-apple-system,sans-serif; font-size:.55rem; font-weight:700; color:#334155; margin-top:2px;">Deneme Ustası</div></div>
+              </div>
+            </div>
+            <div class="mock-card" style="text-align:center; position:relative; padding-top:20px;">
+              <span class="confetti-demo" style="position:absolute; top:2px; left:20px; font-size:1.1rem;">🎉</span>
+              <span class="confetti-demo" style="position:absolute; top:-2px; right:24px; font-size:1.2rem;">✨</span>
+              <p style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#a855f7; text-transform:uppercase; letter-spacing:.05em; margin:0 0 4px;">Yeni Rozet Kazandın!</p>
+              <div style="font-size:2.4rem;">🏆</div>
+              <div style="font-family:Georgia,serif; font-weight:800; font-size:.92rem; color:#1e293b;">Deneme Ustası</div>
+              <div style="font-family:-apple-system,sans-serif; font-size:.66rem; color:#94a3b8; margin-top:2px;">İlk deneme sınavını tamamladın</div>
+            </div>
+            <div class="mock-card" style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.6rem;">📊</span>
+              <div>
+                <div style="font-family:-apple-system,sans-serif; font-weight:800; font-size:.78rem; color:#1e293b;">İsimsiz sıralama: şubende 12. sıradasın</div>
+                <div style="font-family:-apple-system,sans-serif; font-size:.64rem; color:#94a3b8; margin-top:2px;">34 öğrenci arasında — kimlik hiç görünmez, sadece sıran gösterilir.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 21. SCREENSHOT: TIME MANAGEMENT -->
+<section class="slide" id="s3shottime" data-notes="💡 Vurgu: Sadece 'doğru mu yanlış mı' değil, 'ne kadar sürede çözdü' de takip ediliyor. Öğretmen/veli tarafında sadece konu bazlı özet gösteriliyor (soru bazlı detay öğrenciye özel, gereksiz mikro-yönetim yaratmıyor).
+
+❓ Olası soru: Bu veri öğretmene de gidiyor mu?
+✅ Cevap: Evet — öğretmen ekranında da konu bazlı zaman verisi, sınıfın genelinde hangi konuların zaman aldığını görmek için kullanılabilir.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Sadece doğru/yanlış değil — ne kadar sürede çözdüğü de önemli</h2>
+    <p class="lead">Öğrenci ekranında soru bazlı süre takibi ve zaman haritası var; veli ve öğretmen tarafında ise sadece konu bazlı bir özet gösterilir — gereksiz detayla boğulmadan "hangi konu yavaşlatıyor" sorusuna cevap alınır.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header purple">
+            <div class="emoji">👨‍👩‍👧</div>
+            <h4>Elif Yılmaz</h4>
+            <p>Veli Paneli</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>⏱ Yavaş Konular</h5>
+              <p class="hint">Ortalamanın belirgin üzerinde zaman harcanan konular</p>
+              <div class="mock-row"><div><div class="name">🔢 Kesirlerle İşlemler</div><div class="sub">Matematik</div></div><div class="right"><span class="mock-badge badge-orange">Ort. 2dk 40sn</span></div></div>
+              <div class="mock-row"><div><div class="name">🔬 Kuvvet ve Hareket</div><div class="sub">Fen Bilimleri</div></div><div class="right"><span class="mock-badge badge-orange">Ort. 2dk 05sn</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 22. ROADMAP -->
+<section class="slide" id="s6" data-notes="💡 Vurgu: Kalan 3 maddeyi baskı hissettirmeden, 'sizinle birlikte şekillendireceğiz' tonuyla sunun — eksiklik değil, birlikte karar verilecek adımlar.
+
+❓ Olası soru: Bu 3 madde ne zaman tamamlanır?
+✅ Cevap: Net bir tarih vermeyin — 'görüşme ilerledikçe gerçek ihtiyacınıza göre önceliklendiririz' deyin, taahhüt vermeyin.">
+  <div class="slide-inner">
+    <div class="kicker">Sırada Ne Var</div>
+    <h2>Sizinle birlikte şekillendireceğimiz adımlar</h2>
+    <p class="lead">Aşağıdaki üç geliştirme, ilk kullanım için zorunlu değil — görüşme ilerledikçe gerçek ihtiyacınıza göre hızla devreye alınabilir.</p>
+    <div class="roadmap-list">
+      <div class="roadmap-item"><span class="icon">🎨</span><div><h3>Kurumsal Marka Uyumu (White-Label)</h3><p>Platformun kendi kurum adınız ve logonuzla sunulması.</p></div></div>
+      <div class="roadmap-item"><span class="icon">📤</span><div><h3>Veri Dışa Aktarma</h3><p>Öğrenci performans verilerinin Excel formatında dışa aktarılması.</p></div></div>
+      <div class="roadmap-item"><span class="icon">🔑</span><div><h3>Çoklu Yönetici Hesabı</h3><p>Kurum personeline özel, yetkilendirilebilir ayrı yönetici hesapları.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23. CLOSING -->
+<section class="slide closing" id="s7" data-notes="💡 Vurgu: Pilot teklifini net yapın. 4/7 istatistiğini vurgulayın, kalan 3 maddenin esnek olduğunu tekrar hatırlatın. İsterlerse formu şimdi doldurtun — buton tıklanınca gerçek bir mail gönderiyor.
+
+❓ Olası soru: Fiyat ne kadar?
+✅ Cevap: 'Bunu ayrı, doğrudan bir görüşmede netleştirelim' diyerek yönlendirin — burada rakam telaffuz etmeyin, önce pilot sürecine odaklanın.">
+  <div class="slide-inner">
+    <div class="kicker" style="color:var(--gold);">Kapanış</div>
+    <h2>Kurumunuz için bir pilot başlatalım</h2>
+    <p>Ürün bugün çalışıyor, kurumsal altyapı hazır. Bir şubenizle küçük ölçekli bir pilot yaparak, gerçek verilerle bize katılın.</p>
+    <div class="stat-row">
+      <div class="stat"><b>4/7</b><span>Kurumsal Modül Tamam</span></div>
+      <div class="stat"><b>%100</b><span>Canlı Sistem</span></div>
+      <div class="stat"><b>0</b><span>Kurulum Zahmeti</span></div>
+    </div>
+    <p class="stat-footnote">Kalan 3 madde sabit bir yol haritası değil — sizin kurumunuzun ihtiyacına göre birlikte şekillendirilir.</p>
+
+    <div class="pilot-toggle-wrap">
+      <div class="cta-row">
+        <button class="cta primary" id="pilotToggleBtn" type="button">Pilot Görüşmesi Planlayalım</button>
+        <span class="cta ghost">hedefimlgs.com</span>
+      </div>
+
+      <form class="pilot-form" id="pilotForm" hidden>
+        <div class="row single">
+          <div>
+            <label for="pf-institution">Kurum Adı *</label>
+            <input id="pf-institution" name="institutionName" type="text" required placeholder="Örn: Başarı Dershanesi" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="pf-contact">Yetkili Adı Soyadı *</label>
+            <input id="pf-contact" name="contactName" type="text" required placeholder="Ad Soyad" />
+          </div>
+          <div>
+            <label for="pf-phone">Telefon *</label>
+            <input id="pf-phone" name="phone" type="tel" required placeholder="05xxxxxxxxx"
+              inputmode="numeric" pattern="[0-9]{11}" minlength="11" maxlength="11"
+              title="Telefon numarası tam olarak 11 haneli olmalı (Örn: 05xxxxxxxxx)" />
+          </div>
+        </div>
+        <div class="row single">
+          <div>
+            <label for="pf-email">E-posta *</label>
+            <input id="pf-email" name="email" type="email" required placeholder="ornek@kurum.com"
+              pattern="[^\s@]+@[^\s@]+\.[^\s@]+" title="Geçerli bir e-posta adresi girin (Örn: ornek@kurum.com)" />
+          </div>
+        </div>
+        <div class="row single">
+          <div>
+            <label for="pf-preference">İletişim Tercihi *</label>
+            <select id="pf-preference" name="contactPreference" required
+              style="width:100%; background:rgba(255,255,255,.94); border:1px solid transparent; border-radius:10px; padding:9px 11px; font-size:.86rem; color:#1c1926; font-family:-apple-system,sans-serif; margin-bottom:12px;">
+              <option value="">Seçiniz</option>
+              <option value="E-posta">E-posta ile yazışmayı tercih ederim</option>
+              <option value="Telefon">Telefonla aranmak isterim</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="pf-branch">Şube Sayısı</label>
+            <input id="pf-branch" name="branchCount" type="text" placeholder="Örn: 3" />
+          </div>
+          <div>
+            <label for="pf-students">Öğrenci Sayısı</label>
+            <input id="pf-students" name="studentCount" type="text" placeholder="Örn: 250" />
+          </div>
+        </div>
+        <div class="row single">
+          <div>
+            <label for="pf-message">Not (opsiyonel)</label>
+            <textarea id="pf-message" name="message" placeholder="Eklemek istediğiniz bir şey var mı?"></textarea>
+          </div>
+        </div>
+        <button class="submit-btn" type="submit" id="pilotSubmitBtn">Talebi Gönder</button>
+        <div class="form-msg" id="pilotFormMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dots = [...document.querySelectorAll('.dots a')];
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counterNow = document.getElementById('counterNow');
+  counterNow.textContent = 1;
+  document.getElementById('counterTotal').textContent = slides.length;
+
+  let current = 0;
+
+  function render() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('prev');
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    counterNow.textContent = current + 1;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    window.presenterState = { current, total: slides.length };
+  }
+
+  // Sunucu Görünümü penceresinin okuması için: slayt başlığı + notu
+  window.getSlideInfo = function (i) {
+    const s = slides[i];
+    if (!s) return null;
+    const heading = s.querySelector('h1, h2');
+    return { title: heading ? heading.textContent.trim() : '', notes: s.dataset.notes || '' };
+  };
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    render();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach(d => d.addEventListener('click', e => {
+    e.preventDefault();
+    goTo(parseInt(d.dataset.goto, 10));
+  }));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+    if (e.key === 'p' || e.key === 'P') { window.open('presenter.html', 'hedefimlgs_presenter', 'width=760,height=640'); }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) goTo(current + (dx < 0 ? 1 : -1));
+    touchStartX = null;
+  }, { passive: true });
+
+  document.getElementById('coverNext').addEventListener('click', () => goTo(current + 1));
+
+  document.getElementById('presenterBtn').addEventListener('click', () => {
+    window.open('presenter.html', 'hedefimlgs_presenter', 'width=760,height=640');
+  });
+
+  // Pilot talep formu
+  const pilotToggleBtn = document.getElementById('pilotToggleBtn');
+  const pilotForm = document.getElementById('pilotForm');
+  const pilotPhoneInput = document.getElementById('pf-phone');
+  pilotPhoneInput.addEventListener('input', () => {
+    pilotPhoneInput.value = pilotPhoneInput.value.replace(/\D/g, '').slice(0, 11);
+  });
+  pilotToggleBtn.addEventListener('click', () => {
+    pilotForm.hidden = !pilotForm.hidden;
+    if (!pilotForm.hidden) document.getElementById('pf-institution').focus();
+  });
+
+  pilotForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('pilotSubmitBtn');
+    const msg = document.getElementById('pilotFormMsg');
+    msg.textContent = ''; msg.className = 'form-msg';
+
+    const data = Object.fromEntries(new FormData(pilotForm).entries());
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Gönderiliyor...';
+
+    try {
+      const res = await fetch('/api/pilot-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Bir hata oluştu');
+      msg.textContent = '✅ Talebiniz alındı, en kısa sürede sizinle iletişime geçeceğiz.';
+      msg.classList.add('ok');
+      pilotForm.reset();
+      submitBtn.textContent = 'Talebi Gönder';
+      submitBtn.disabled = false;
+    } catch (err) {
+      msg.textContent = '❌ ' + (err.message || 'Talep gönderilemedi, lütfen tekrar deneyin.');
+      msg.classList.add('err');
+      submitBtn.textContent = 'Talebi Gönder';
+      submitBtn.disabled = false;
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hedefim LGS — Aileler İçin</title>
+<meta name="description" content="Hedefim LGS: veli ve öğrenciler için tanıtım sunumu" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#16231f;
+  --ink-soft:#5f7069;
+  --paper:#f6f8f7;
+  --card:#ffffff;
+  --line:#e1e8e5;
+  --teal-1:#0d8c78;
+  --teal-2:#075f52;
+  --teal-soft:#e2f5f0;
+  --coral:#ff7a59;
+  --coral-soft:#ffe4da;
+  --success:#1f8a5f;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#eef5f2;
+    --ink-soft:#9fb3ac;
+    --paper:#0d1613;
+    --card:#132420;
+    --line:#24413a;
+    --teal-1:#2dd4bf;
+    --teal-2:#14b8a6;
+    --teal-soft:#173832;
+    --coral:#ff8f70;
+    --coral-soft:#3a2018;
+    --success:#4fd39a;
+  }
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
+  line-height:1.55;
+  overflow:hidden;
+}
+h1,h2,h3{
+  font-family:Georgia,'Iowan Old Style','Palatino Linotype',serif;
+  font-weight:600;
+  text-wrap:balance;
+  margin:0;
+}
+::selection{background:var(--coral-soft);}
+
+/* ── nav dots ───────────────────────────── */
+.dots{
+  position:fixed; right:22px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:10px; z-index:50;
+}
+.dots a{ width:8px;height:8px;border-radius:50%; background:var(--line); display:block; transition:transform .2s, background .2s; }
+.dots a:hover, .dots a.active{background:var(--teal-1); transform:scale(1.3);}
+@media (max-width:680px){ .dots{display:none;} }
+
+/* ── slide shell ────────────────────────── */
+.slide{
+  position:fixed; inset:0; height:100vh; display:flex; flex-direction:column; justify-content:center;
+  padding:80px 8vw; opacity:0; visibility:hidden; transform:translateX(24px);
+  transition:opacity .38s ease, transform .38s ease, visibility 0s linear .38s; overflow-y:auto;
+}
+.slide.active{ opacity:1; visibility:visible; transform:translateX(0); transition:opacity .38s ease, transform .38s ease; z-index:2; }
+.slide.prev{transform:translateX(-24px);}
+@media (prefers-reduced-motion:reduce){ .slide{transition:opacity .01s linear, visibility 0s linear;} }
+.slide-inner{max-width:920px; margin:0 auto; width:100%;}
+.kicker{ font-size:.72rem; text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:var(--teal-1); margin-bottom:14px; }
+
+/* ── cover ──────────────────────────────── */
+.cover{
+  background:linear-gradient(160deg, var(--teal-2) 0%, var(--teal-1) 55%, #5eead4 100%);
+  color:#fff; text-align:center; align-items:center; overflow:hidden;
+}
+.cover .slide-inner{display:flex; flex-direction:column; align-items:center; gap:22px;}
+.cover-mark{width:88px;height:88px;}
+.cover h1{ font-size:clamp(2.2rem,5vw,3.4rem); color:#fff; letter-spacing:-0.01em; }
+.cover h1 sup{ font-family:-apple-system,sans-serif; font-weight:800; font-size:.34em; color:var(--coral); margin-left:.15em; vertical-align:super; }
+.cover p.tagline{ font-size:1.05rem; color:rgba(255,255,255,.86); max-width:36ch; }
+.cover .for-line{
+  margin-top:18px; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.65);
+  border-top:1px solid rgba(255,255,255,.25); padding-top:16px;
+}
+.cover-decor{position:absolute; inset:0; overflow:hidden; pointer-events:none;}
+.cover-decor span{position:absolute; opacity:.16; font-size:2.6rem;}
+.scroll-cue{
+  position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+  font-size:.72rem; color:rgba(255,255,255,.7); letter-spacing:.08em; display:flex; align-items:center; gap:6px;
+}
+.scroll-cue .arrow{animation:nudge 1.8s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateX(0);}50%{transform:translateX(5px);}}
+@media (prefers-reduced-motion:reduce){.scroll-cue .arrow{animation:none;}}
+
+/* ── slide controls ─────────────────────── */
+.slide-controls{ position:fixed; left:0; right:0; bottom:20px; display:flex; align-items:center; justify-content:center; gap:18px; z-index:50; pointer-events:none; }
+.slide-controls > *{pointer-events:auto;}
+.nav-btn{
+  width:40px; height:40px; border-radius:50%; background:var(--card); border:1px solid var(--line); color:var(--ink);
+  font-size:1.1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,.08);
+}
+.nav-btn:disabled{opacity:.35;}
+.slide-counter{
+  font-variant-numeric:tabular-nums; font-size:.78rem; color:var(--ink-soft); background:var(--card); border:1px solid var(--line);
+  border-radius:100px; padding:8px 16px; box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+
+/* ── generic headings ───────────────────── */
+.slide h2{font-size:clamp(1.6rem,3.4vw,2.3rem); margin-bottom:20px;}
+.slide p.lead{color:var(--ink-soft); font-size:1.05rem; max-width:62ch; margin-bottom:36px;}
+
+/* ── problem list ───────────────────────── */
+.problem-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+@media (max-width:680px){.problem-grid{grid-template-columns:1fr;}}
+.problem-card{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
+.problem-card .glyph{font-size:1.4rem; margin-bottom:10px; display:block;}
+.problem-card h3{font-size:1rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:6px;}
+.problem-card p{font-size:.88rem; color:var(--ink-soft); margin:0;}
+
+/* ── feature cards ──────────────────────── */
+.feature-row{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.feature-row.cols-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:900px){.feature-row, .feature-row.cols-3{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.feature-row, .feature-row.cols-3{grid-template-columns:1fr;}}
+.feature-card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 18px; text-align:center; }
+.feature-card .glyph{font-size:1.8rem; margin-bottom:10px; display:block;}
+.feature-card h3{font-size:.92rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:6px;}
+.feature-card p{font-size:.8rem; color:var(--ink-soft); margin:0; line-height:1.5;}
+
+/* ── flow ────────────────────────────────── */
+.flow{display:flex; flex-wrap:wrap; gap:0; align-items:stretch; counter-reset:step;}
+.flow-step{ flex:1 1 200px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 18px; position:relative; margin:6px; }
+.flow-step .num{
+  counter-increment:step; font-family:Georgia,serif; font-weight:700; font-size:1.5rem;
+  color:var(--coral); -webkit-text-stroke:1.4px var(--teal-1); display:block; margin-bottom:8px;
+}
+.flow-step h3{font-size:.92rem; font-family:-apple-system,sans-serif; font-weight:700; margin-bottom:5px;}
+.flow-step p{font-size:.8rem; color:var(--ink-soft); margin:0;}
+
+/* ── closing ─────────────────────────────── */
+.closing{ background:linear-gradient(160deg, var(--teal-2) 0%, var(--teal-1) 55%, #5eead4 100%); color:#fff; text-align:center; align-items:center; }
+.closing .slide-inner{display:flex; flex-direction:column; align-items:center; gap:20px;}
+.closing h2{color:#fff; font-size:clamp(1.7rem,4vw,2.5rem);}
+.closing p{color:rgba(255,255,255,.85); max-width:44ch; font-size:1rem;}
+.cta-row{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px;}
+.cta{ font-weight:700; font-size:.92rem; padding:13px 26px; border-radius:100px; font-family:-apple-system,sans-serif; }
+.cta.primary{background:var(--coral); color:#3a1608;}
+.cta.ghost{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.4); color:#fff;}
+.closing .stat-row{display:flex; gap:34px; margin-top:10px; flex-wrap:wrap; justify-content:center;}
+.closing .stat{text-align:center;}
+.closing .stat b{display:block; font-size:1.7rem; font-family:Georgia,serif;}
+.closing .stat span{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.7);}
+.closing .stat-footnote{ font-size:.78rem; color:rgba(255,255,255,.7); max-width:40ch; margin-top:2px; }
+
+/* ── deneme talep formu ──────────────────── */
+.pilot-form{
+  margin-top:22px; width:100%; max-width:440px; text-align:left;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22); border-radius:18px; padding:22px 22px 20px;
+}
+.pilot-form .row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.pilot-form .row.single{grid-template-columns:1fr;}
+.pilot-form label{ display:block; font-size:.72rem; color:rgba(255,255,255,.75); margin-bottom:4px; font-family:-apple-system,sans-serif; }
+.pilot-form input, .pilot-form textarea, .pilot-form select{
+  width:100%; background:rgba(255,255,255,.94); border:1px solid transparent; border-radius:10px; padding:9px 11px;
+  font-size:.86rem; color:#16231f; font-family:-apple-system,sans-serif; margin-bottom:12px;
+}
+.pilot-form input:focus, .pilot-form textarea:focus, .pilot-form select:focus{outline:2px solid var(--coral);}
+.pilot-form textarea{resize:vertical; min-height:56px;}
+.pilot-form .submit-btn{
+  width:100%; border:none; cursor:pointer; background:var(--coral); color:#3a1608; font-weight:700; font-size:.9rem;
+  padding:12px; border-radius:10px; font-family:-apple-system,sans-serif;
+}
+.pilot-form .submit-btn:disabled{opacity:.6; cursor:default;}
+.pilot-form .form-msg{ margin-top:10px; font-size:.8rem; text-align:center; font-family:-apple-system,sans-serif; }
+.pilot-form .form-msg.ok{color:#c7f9dd;}
+.pilot-form .form-msg.err{color:#ffd0d0;}
+.pilot-toggle-wrap{display:flex; flex-direction:column; align-items:center; width:100%;}
+
+@media (max-width:680px){ .slide{padding:64px 6vw;} }
+
+/* ── ekran görüntüsü mockup çerçevesi ───── */
+.shot-wrap{display:flex; justify-content:center;}
+.browser-frame{
+  width:100%; max-width:520px; background:#f8fafc; border-radius:16px; border:1px solid rgba(0,0,0,.08); overflow:hidden;
+  box-shadow:0 24px 60px rgba(6,40,34,.22), 0 4px 14px rgba(6,40,34,.1);
+}
+.browser-topbar{ background:#e4ece9; display:flex; align-items:center; gap:6px; padding:9px 12px; }
+.browser-dot{width:9px; height:9px; border-radius:50%;}
+.browser-url{
+  background:#fff; border-radius:7px; padding:4px 12px; font-size:.68rem; color:#64748b; margin-left:8px; flex:1;
+  font-family:-apple-system,sans-serif; text-align:center;
+}
+.mock-body{max-height:420px; overflow:hidden; position:relative;}
+.mock-body::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:32px; background:linear-gradient(to bottom, transparent, #f8fafc); }
+
+.mock-header{background:linear-gradient(to right,#0f2f2a,#0a201c); color:#fff; padding:20px 18px 16px;}
+.mock-header .emoji{font-size:1.5rem; margin-bottom:6px;}
+.mock-header h4{font-family:-apple-system,sans-serif; font-size:1rem; font-weight:800; margin:0;}
+.mock-header p{font-family:-apple-system,sans-serif; font-size:.72rem; color:#94a3b8; margin:2px 0 0;}
+.mock-header.teal{background:linear-gradient(to right,#0f766e,#0d9488);}
+.mock-header.teal p{color:#ccfbf1;}
+.mock-header.coral{background:linear-gradient(to right,#ea580c,#f97316);}
+.mock-header.coral p{color:#ffedd5;}
+
+.mock-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:12px;}
+.mock-stat{background:#fff; border-radius:12px; padding:12px 8px; text-align:center; box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.mock-stat b{display:block; font-family:-apple-system,sans-serif; font-size:1.15rem; font-weight:800; color:#0f2f2a;}
+.mock-stat span{font-family:-apple-system,sans-serif; font-size:.62rem; color:#64748b;}
+
+.mock-section{padding:0 12px 12px;}
+.mock-card{background:#fff; border-radius:14px; padding:12px 14px; box-shadow:0 1px 2px rgba(0,0,0,.04); margin-bottom:8px;}
+.mock-card h5{font-family:-apple-system,sans-serif; font-size:.76rem; font-weight:800; color:#334155; margin:0 0 8px;}
+.mock-card p.hint{font-family:-apple-system,sans-serif; font-size:.62rem; color:#94a3b8; margin:-6px 0 8px;}
+
+.mock-row{display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border-radius:10px; padding:8px 10px; margin-bottom:5px; font-family:-apple-system,sans-serif;}
+.mock-row .name{font-size:.72rem; font-weight:800; color:#334155;}
+.mock-row .sub{font-size:.62rem; color:#94a3b8;}
+.mock-row .right{text-align:right;}
+.mock-badge{font-size:.6rem; font-weight:700; padding:2px 7px; border-radius:100px;}
+.badge-green{background:#dcfce7; color:#15803d;}
+.badge-red{background:#fee2e2; color:#dc2626;}
+.badge-orange{background:#ffedd5; color:#c2410c;}
+.badge-teal{background:#ccfbf1; color:#0f766e;}
+.badge-coral{background:#ffe4da; color:#c2410c;}
+
+.mock-upload{border:2px dashed #cbd5e1; border-radius:12px; padding:16px; text-align:center; font-family:-apple-system,sans-serif;}
+.mock-upload .icon{font-size:1.4rem;}
+.mock-upload p{font-size:.68rem; color:#64748b; margin:6px 0 0;}
+.mock-btn{background:#0f2f2a; color:#fff; text-align:center; border-radius:10px; padding:9px; font-family:-apple-system,sans-serif; font-size:.72rem; font-weight:700; margin-top:8px;}
+
+.shot-caption{text-align:center; font-size:.8rem; color:var(--ink-soft); margin-top:14px; max-width:52ch; margin-left:auto; margin-right:auto;}
+.shot-caption b{color:var(--ink);}
+
+.redpen-note{ font-family:'Caveat', cursive; font-weight:600; color:#c0392b; font-size:1.15rem; line-height:1.4; margin:2px 0 8px 2px; }
+
+/* ── karşılaştırma tablosu ───────────────── */
+.compare-table{
+  width:100%; border-collapse:separate; border-spacing:0; background:var(--card); border:1px solid var(--line);
+  border-radius:16px; overflow:hidden; font-size:.86rem;
+}
+.compare-table th, .compare-table td{ padding:12px 14px; text-align:left; border-bottom:1px solid var(--line); }
+.compare-table thead th{ background:var(--teal-soft); color:var(--teal-1); font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; font-weight:700; }
+.compare-table thead th:first-child{background:transparent; color:var(--ink-soft);}
+.compare-table tbody tr:last-child td{border-bottom:none;}
+.compare-table td.feature-name{font-weight:600; color:var(--ink);}
+.compare-table td.check{text-align:center; font-size:1.1rem;}
+.compare-table td.check.yes{color:var(--success);}
+.compare-table td.check.no{color:#cbd5e1;}
+.compare-table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+.compare-table th:nth-child(2), .compare-table th:nth-child(3),
+.compare-table td:nth-child(2), .compare-table td:nth-child(3){ opacity:.55; }
+.compare-table thead th:nth-child(4){ background:var(--teal-1); color:#fff; border-top:2px solid var(--teal-1); }
+.compare-table td:nth-child(4){ background:var(--teal-soft); border-left:2px solid var(--teal-1); border-right:2px solid var(--teal-1); }
+.compare-table tbody tr:last-child td:nth-child(4){ border-bottom:2px solid var(--teal-1); }
+.compare-table td:nth-child(4).check.yes{ color:var(--teal-1); font-weight:800; font-size:1.2rem; }
+
+.trust-note{
+  margin-top:18px;
+  background:linear-gradient(135deg, var(--teal-soft), rgba(13,140,120,.06));
+  border:1px solid rgba(13,140,120,.3); border-left:5px solid var(--teal-1);
+  border-radius:16px; padding:20px 24px; display:flex; gap:16px; align-items:flex-start;
+  box-shadow:0 10px 28px rgba(13,140,120,.14);
+}
+.trust-note .glyph{
+  font-size:1.5rem; flex-shrink:0; width:46px; height:46px; border-radius:50%;
+  background:var(--card); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.trust-note p{font-size:.96rem; color:var(--ink); margin:0; line-height:1.55;}
+.trust-note p b{color:var(--teal-1); font-weight:800;}
+
+/* mail frame */
+.mail-frame{
+  width:100%; max-width:520px; background:#fff; border-radius:16px; border:1px solid rgba(0,0,0,.08); overflow:hidden;
+  box-shadow:0 24px 60px rgba(6,40,34,.22), 0 4px 14px rgba(6,40,34,.1); font-family:-apple-system,sans-serif;
+}
+.mail-topbar{background:#f0fdfa; padding:12px 16px; border-bottom:1px solid #e2e8f0;}
+.mail-topbar .subject{font-size:.82rem; font-weight:800; color:#0f2f2a;}
+.mail-topbar .meta{font-size:.66rem; color:#94a3b8; margin-top:3px;}
+.mail-body{padding:16px; max-height:400px; overflow:hidden; position:relative;}
+.mail-body::after{content:""; position:absolute; left:0; right:0; bottom:0; height:32px; background:linear-gradient(to bottom, transparent, #fff);}
+.mail-h{color:#0f766e; font-size:.86rem; font-weight:800; margin:0 0 10px;}
+.mail-row{display:flex; gap:14px; justify-content:center; flex-wrap:nowrap; align-items:flex-start;}
+.mail-frame.mini{max-width:270px; flex:1 1 270px;}
+@media (max-width:900px){ .mail-row{flex-wrap:wrap;} }
+.mail-frame.mini .mail-topbar .subject{font-size:.68rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.mail-frame.mini .mail-body{padding:12px; max-height:320px;}
+.mail-frame.mini .mail-label{font-family:-apple-system,sans-serif; font-size:.72rem; font-weight:800; color:#0d8c78; margin:0 0 8px;}
+.mail-table{width:100%; border-collapse:collapse; font-size:.68rem; margin-bottom:12px;}
+.mail-table td{padding:3px 0; color:#374151;}
+.mail-table td:first-child{color:#6b7280; width:110px;}
+.mail-section-title{font-size:.72rem; font-weight:800; color:#1f2937; margin:12px 0 6px;}
+
+/* exam screen */
+.exam-topbar{background:#0f2f2a; color:#fff; display:flex; justify-content:space-between; align-items:center; padding:12px 16px; font-family:-apple-system,sans-serif;}
+.exam-topbar .q-count{font-size:.72rem; font-weight:700;}
+.exam-topbar .timer{font-size:.78rem; font-weight:800; background:rgba(255,255,255,.12); padding:4px 10px; border-radius:8px; font-variant-numeric:tabular-nums;}
+.exam-progress{height:4px; background:#264a43;}
+.exam-progress-fill{height:100%; background:#2dd4bf; width:26%;}
+.exam-question{padding:16px; font-family:-apple-system,sans-serif;}
+.exam-question .qtext{font-size:.78rem; color:#0f2f2a; font-weight:600; line-height:1.5; margin-bottom:12px;}
+.exam-option{display:flex; align-items:center; gap:8px; border:1.5px solid #e2e8f0; border-radius:10px; padding:9px 11px; font-size:.72rem; color:#334155; margin-bottom:7px;}
+.exam-option .letter{width:20px; height:20px; border-radius:50%; background:#f1f5f9; color:#64748b; font-weight:800; font-size:.62rem; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.exam-option.selected{border-color:#0d9488; background:#f0fdfa;}
+.exam-option.selected .letter{background:#0d9488; color:#fff;}
+
+/* konu haritası çubukları */
+.topic-bar-track{background:#f1f5f9; border-radius:100px; height:7px; margin-bottom:9px;}
+.topic-bar-fill{border-radius:100px; height:7px;}
+.topic-row{font-family:-apple-system,sans-serif; font-size:.68rem; color:#475569; display:flex; justify-content:space-between; margin-bottom:3px;}
+
+@media (max-width:680px){ .browser-frame, .mail-frame{max-width:100%;} }
+</style>
+</head>
+<body>
+
+<nav class="dots" role="tablist" aria-label="Slayt gezinme">
+  <a href="#" data-goto="0" class="active" role="tab" aria-label="Slayt 1"></a>
+  <a href="#" data-goto="1" role="tab" aria-label="Slayt 2"></a>
+  <a href="#" data-goto="2" role="tab" aria-label="Slayt 3"></a>
+  <a href="#" data-goto="3" role="tab" aria-label="Slayt 4"></a>
+  <a href="#" data-goto="4" role="tab" aria-label="Slayt 5"></a>
+  <a href="#" data-goto="5" role="tab" aria-label="Slayt 6"></a>
+  <a href="#" data-goto="6" role="tab" aria-label="Slayt 7"></a>
+  <a href="#" data-goto="7" role="tab" aria-label="Slayt 8"></a>
+  <a href="#" data-goto="8" role="tab" aria-label="Slayt 9"></a>
+  <a href="#" data-goto="9" role="tab" aria-label="Slayt 10"></a>
+  <a href="#" data-goto="10" role="tab" aria-label="Slayt 11"></a>
+  <a href="#" data-goto="11" role="tab" aria-label="Slayt 12"></a>
+  <a href="#" data-goto="12" role="tab" aria-label="Slayt 13"></a>
+  <a href="#" data-goto="13" role="tab" aria-label="Slayt 14"></a>
+  <a href="#" data-goto="14" role="tab" aria-label="Slayt 15"></a>
+</nav>
+
+<div class="slide-controls">
+  <button class="nav-btn" id="prevBtn" aria-label="Önceki slayt">‹</button>
+  <span class="slide-counter"><span id="counterNow">1</span> / <span id="counterTotal">14</span></span>
+  <button class="nav-btn" id="nextBtn" aria-label="Sonraki slayt">›</button>
+</div>
+
+<button id="presenterBtn" type="button" hidden
+  style="position:fixed; top:16px; left:16px; z-index:60; background:var(--card); border:1px solid var(--line); color:var(--ink-soft); font-size:.72rem; font-weight:600; padding:8px 13px; border-radius:100px; box-shadow:0 4px 14px rgba(0,0,0,.08); cursor:pointer; font-family:-apple-system,sans-serif;">
+  🎤 Sunucu Görünümü
+</button>
+
+<!-- 1. COVER -->
+<section class="slide cover active" id="v1" data-notes="💡 Vurgu: Bu, dershaneye değil doğrudan bir veliye/aileye yapılan tanıtım. Ton daha sıcak, daha az kurumsal olmalı — 'çocuğunuz' diye hitap edin.
+
+❓ Olası soru: Bu tamamen yerli bir ürün mü, verilerimiz güvende mi?
+✅ Cevap: Evet, sıfırdan bizim tarafımızdan geliştirildi. Çocuğunuzun verileri KVKK kapsamında korunuyor, üçüncü taraflarla paylaşılmıyor.">
+  <div class="cover-decor" aria-hidden="true">
+    <span style="top:12%;left:8%;transform:rotate(-14deg);">✏️</span>
+    <span style="top:64%;left:12%;transform:rotate(10deg);">🎯</span>
+    <span style="top:18%;right:10%;transform:rotate(12deg);">🏆</span>
+    <span style="top:62%;right:8%;transform:rotate(-8deg);">🎓</span>
+  </div>
+  <div class="slide-inner">
+    <svg class="cover-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="34" cy="30" r="25" fill="none" stroke="#fff" stroke-width="3" opacity="0.95"/>
+      <circle cx="34" cy="30" r="15.5" fill="none" stroke="#fff" stroke-width="3" opacity="0.7"/>
+      <path d="M6 58 L24 40" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M24 40 L24 32 L32 32 Z" fill="#fff"/>
+      <circle cx="34" cy="30" r="5.5" fill="#FF7A59"/>
+    </svg>
+    <h1>hedefim<sup>LGS</sup></h1>
+    <p class="tagline">Çocuğunuzun zayıf olduğu konuyu bilen, ona özel soru üreten yapay zekâ destekli sınav hazırlık sistemi</p>
+    <div class="for-line">Veli ve Öğrenciler İçin</div>
+  </div>
+  <button class="scroll-cue" id="coverNext" style="background:none;border:none;cursor:pointer;"><span>İleri</span><span class="arrow">→</span></button>
+</section>
+
+<!-- 2. PROBLEM -->
+<section class="slide" id="v2" data-notes="💡 Vurgu: Velinin gündelik yaşadığı sıkıntıları anlattığınızı hissettirin — 'çocuğum nerede zayıf bilmiyorum', 'aynı soruları tekrar tekrar çözüyor ama ilerleme yok' gibi.
+
+❓ Olası soru: Özel ders/dershaneye zaten gidiyoruz, buna ne gerek var?
+✅ Cevap: Bu bir alternatif değil, tamamlayıcı — özel ders haftada birkaç saat, bu sistem her gün, her soruda çocuğunuzu takip ediyor.">
+  <div class="slide-inner">
+    <div class="kicker">Her Ailenin Bildiği Sorun</div>
+    <h2>Genel soru bankaları, çocuğunuzu tanımıyor</h2>
+    <p class="lead">Bir kitaptan veya uygulamadan rastgele soru çözmek, hangi konuda gerçekten zayıf olduğunu göstermiyor — ilerleme hissi yanıltıcı olabiliyor.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <span class="glyph">❓</span>
+        <h3>Nerede zayıf, bilmiyoruz</h3>
+        <p>Yüzlerce soru çözülüyor ama hangi konunun asıl sorun olduğu net değil.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">📚</span>
+        <h3>Herkese aynı sorular</h3>
+        <p>Kitaptaki sorular tüm öğrenciler için aynı — çocuğunuza özel bir şey yok.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">😕</span>
+        <h3>Yanlışın nedenini kimse anlatmıyor</h3>
+        <p>Doğru cevap anahtarı var ama "neden yanlış yaptım" sorusuna cevap yok.</p>
+      </div>
+      <div class="problem-card">
+        <span class="glyph">📵</span>
+        <h3>Veli habersiz kalıyor</h3>
+        <p>Çocuğun gerçekten çalışıp çalışmadığını, ilerleyip ilerlemediğini görmek zor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SCREENSHOT: STEP-BY-STEP SOLUTION -->
+<section class="slide" id="v3" data-notes="💡 Vurgu: En güçlü slayt. Her yanlış sorunun sadece 'cevap' değil, 'neden' ile birlikte geldiğini vurgulayın — bir öğretmenin yanında oturup anlatması gibi.
+
+❓ Olası soru: Yapay zeka yanlış/eksik açıklama üretirse ne olur?
+✅ Cevap: Çocuğunuz sorunlu bulduğu her soruyu tek tıkla bildirebiliyor, bize düşüyor ve inceliyoruz. Ayrıca her soru MEB müfredat kazanımına bağlı üretiliyor, rastgele değil.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Sadece doğru cevap değil — neden yanlış yaptığını da öğrenir</h2>
+    <p class="lead">Çocuğunuz yanlış yaptığında, yapay zekâ o soruyu adım adım anlatır ve zayıf olduğu konudan kısa bir mini ders hazırlar.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/result</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>🧩 Yanlış Yapılan Soru — Çözüm</h5>
+              <div style="font-family:-apple-system,sans-serif; font-size:.72rem; color:#334155; background:#f8fafc; border-radius:10px; padding:10px 12px; margin-bottom:8px;">
+                Bir kenarı 12 cm olan kare şeklindeki bahçenin çevresine 30 cm'lik taşlar döşenecek. En az kaç taş gerekir?
+              </div>
+              <div style="display:flex; gap:8px; margin-bottom:10px;">
+                <span class="mock-badge badge-red">Cevabı: A</span>
+                <span class="mock-badge badge-green">Doğru Cevap: B</span>
+              </div>
+              <p class="redpen-note">bak buraya, çevreyi taş uzunluğuna böl 👉</p>
+              <div style="font-family:-apple-system,sans-serif; font-size:.7rem; color:#475569; line-height:1.6; border-left:3px solid #0d9488; padding-left:10px;">
+                <b style="color:#334155;">Adım 1:</b> Bahçenin çevresi = 4 × 12 = 48 cm.<br/>
+                <b style="color:#334155;">Adım 2:</b> Taş sayısı = Çevre ÷ Taş uzunluğu = 48 ÷ 30 ≈ 1,6.<br/>
+                <b style="color:#334155;">Adım 3:</b> Doğru döşeme hesabıyla gereken taş sayısı 16'dır. Cevap: <b>B</b>.
+              </div>
+            </div>
+            <div class="mock-card">
+              <h5>📘 Mini Ders: Kesirlerle İşlemler</h5>
+              <div style="font-family:-apple-system,sans-serif; font-size:.7rem; color:#475569; line-height:1.6;">
+                Kesirlerde toplama ve çıkarma yapabilmek için paydaların eşit olması gerekir. Paydalar farklıysa önce paydaları eşitlemeliyiz (OKEK kullanarak)...
+              </div>
+              <div style="margin-top:8px;"><span class="mock-badge badge-teal">🧠 Yapay zekâ tarafından üretildi</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki soru ve içerik örnek amaçlıdır, gerçek yapay zekâ çıktısından biri değildir.</p>
+  </div>
+</section>
+
+<!-- 4. TRUST -->
+<section class="slide" id="v4" data-notes="💡 Vurgu: Veliler için en kritik slayt — 'bu bir kara kutu değil, güvenilir bir sistem' hissini verin. MEB kazanım eşleşmesini mutlaka söyleyin, çoğu genel AI uygulamasının bunu yapmadığını belirtin.
+
+❓ Olası soru: Sorular gerçekten LGS müfredatına uygun mu, yoksa genel mi?
+✅ Cevap: Her soru, ilgili MEB kazanım koduna bağlı üretiliyor — rastgele bir soru havuzu değil, müfredata birebir eşleşen bir sistem.">
+  <div class="slide-inner">
+    <div class="kicker">Güven</div>
+    <h2>Bir kara kutu değil — kontrol edilebilir bir sistem</h2>
+    <p class="lead">Yapay zekâ kullanıyoruz ama sınırsız/denetimsiz değil — her katmanda bir güvenlik ve doğrulama mekanizması var.</p>
+    <div class="feature-row cols-3">
+      <div class="feature-card">
+        <span class="glyph">📖</span>
+        <h3>MEB Kazanım Eşleşmesi</h3>
+        <p>Her soru, ilgili resmi kazanım koduna bağlı üretilir — rastgele bir soru havuzu değil.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">🚩</span>
+        <h3>Hatalı Soru Bildirimi</h3>
+        <p>Çocuğunuz sorunlu bulduğu bir soruyu tek tıkla bildirir, biz inceleriz.</p>
+      </div>
+      <div class="feature-card">
+        <span class="glyph">🔒</span>
+        <h3>KVKK Uyumlu</h3>
+        <p>Veriler üçüncü taraflarla paylaşılmaz, sadece sizin ve çocuğunuzun erişimine açıktır.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. SCREENSHOT: MOCK EXAM -->
+<section class="slide" id="v5" data-notes="💡 Vurgu: Gerçek LGS formatı — 90 soru, 135 dakika, tüm dersler tek oturumda. 'Sınav günü şoku yaşamasın diye' diyebilirsiniz. 2 haftada bir Cumartesi açıldığını, disiplin için bilinçli bir kısıtlama olduğunu belirtin.
+
+❓ Olası soru: Sorular her öğrenci için farklı mı?
+✅ Cevap: Evet — çocuğunuzun zayıf olduğu konulara göre kişiselleştirilmiş üretiliyor, sabit bir soru bankası değil.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Gerçek sınav deneyimi, sınav günü şoku yaşatmadan</h2>
+    <p class="lead">2 haftada bir, gerçek LGS formatında (90 soru, 135 dakika) bir deneme sınavı — çocuğunuz sınav baskısına gerçek sınavdan önce alışır.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/mock-exam</span>
+        </div>
+        <div class="mock-body" style="max-height:none;">
+          <div class="exam-topbar">
+            <span class="q-count">Soru 24 / 90</span>
+            <span class="timer">⏱ 01:42:18</span>
+          </div>
+          <div class="exam-progress"><div class="exam-progress-fill"></div></div>
+          <div class="exam-question">
+            <div class="qtext">Bir kenarı 12 cm olan kare şeklindeki bir bahçenin çevresine, kenarları 30 cm olan kare şeklinde taşlar döşenecektir. Buna göre bahçenin çevresi boyunca en az kaç taş kullanılır?</div>
+            <div class="exam-option"><span class="letter">A</span> 12</div>
+            <div class="exam-option selected"><span class="letter">B</span> 16</div>
+            <div class="exam-option"><span class="letter">C</span> 20</div>
+            <div class="exam-option"><span class="letter">D</span> 24</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Soru içeriği örnek amaçlıdır, gerçek üretilen sorulardan biri değildir.</p>
+  </div>
+</section>
+
+<!-- 6. SCREENSHOT: TOPIC MAP -->
+<section class="slide" id="v6" data-notes="💡 Vurgu: 'Kişiselleştirilmiş öğrenme' iddiasını somut bir görsele bağlayan slayt. Renk kodları çocuğunuzun kendi ilerlemesini bir bakışta görmesini sağlıyor.
+
+❓ Olası soru: Bu veriler nasıl güncelleniyor, ben mi girmem gerekiyor?
+✅ Cevap: Hayır, tamamen otomatik — çocuğunuz her soru çözdüğünde ilgili konunun hakimiyet yüzdesi anında güncelleniyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Hangi konuda güçlü, hangisinde zayıf — tek bakışta</h2>
+    <p class="lead">Konu bazlı ilerleme haritası, çocuğunuzun nerede olduğunu somut bir şekilde gösterir; çalışma planı buna göre otomatik şekillenir.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com/topic-map</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header teal">
+            <div class="emoji">🗺️</div>
+            <h4>Konu Haritan</h4>
+            <p>Matematik</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <div style="font-family:-apple-system,sans-serif; font-size:.72rem; color:#334155; font-weight:800; margin-bottom:10px;">🔢 Matematik <span style="color:#94a3b8; font-weight:400;">— Ortalama hakimiyet: %64</span></div>
+              <div class="topic-row"><span>Tam Sayılarla İşlemler</span><span style="font-weight:700; color:#16a34a;">%82</span></div>
+              <div class="topic-bar-track"><div class="topic-bar-fill" style="width:82%; background:#22c55e;"></div></div>
+              <div class="topic-row"><span>Oran ve Orantı</span><span style="font-weight:700; color:#d97706;">%55</span></div>
+              <div class="topic-bar-track"><div class="topic-bar-fill" style="width:55%; background:#f59e0b;"></div></div>
+              <div class="topic-row"><span>Kesirlerle İşlemler</span><span style="font-weight:700; color:#dc2626;">%28</span></div>
+              <div class="topic-bar-track"><div class="topic-bar-fill" style="width:28%; background:#ef4444;"></div></div>
+              <div class="topic-row" style="color:#94a3b8;"><span>Cebirsel İfadeler</span><span style="font-weight:700;">Denenmedi</span></div>
+              <div class="topic-bar-track" style="margin-bottom:0;"><div class="topic-bar-fill" style="width:8%; background:#e2e8f0;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve yüzdeler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 7. SCREENSHOT: MOTIVATION + LEADERBOARD -->
+<section class="slide" id="v7" data-notes="💡 Vurgu: Bu motivasyon katmanı, öğrencinin sisteme 'yapmak zorunda olduğu için değil, istediği için' dönmesini sağlıyor. Günlük hedef, streak, rozetler ve isimsiz sıralamanın birlikte nasıl çalıştığını anlatın. İsimsiz sıralamada kimlik hiç görünmüyor, sadece sıra ve yüzdelik dilim var; havuz küçükken (100'den az aktif kullanıcı) hiç gösterilmiyor.
+
+❓ Olası soru: Bu oyunlaştırma çocuğumun dikkatini dersten kaydırmaz mı?
+✅ Cevap: Hayır — rozetler ve seri tamamen çalışma davranışına bağlı (gün atlamadan çalışma, sınav tamamlama, kişisel rekor). Ayrı bir eğlence oyunu değil, çalışmayı ödüllendiren bir katman.
+
+❓ Olası soru: Diğer öğrencilerin kim olduğunu görebiliyor mu?
+✅ Cevap: Hayır, hiçbir zaman — ne isim ne de başka bir kimlik bilgisi paylaşılmıyor, sadece 'kaçıncı sıradasın' bilgisi gösteriliyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Motivasyon: günlük hedef, seri, rozetler &amp; isimsiz sıralama</h2>
+    <p class="lead">Çocuğunuz sadece "yapmalıyım" diye değil, biriktirdiği seri ve rozetlerle, kimliği hiç açığa çıkmadan diğer öğrencilerle kıyaslanarak sisteme kendi isteğiyle geri dönüyor.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header teal">
+            <div class="emoji">👋</div>
+            <h4>Merhaba, Ela!</h4>
+            <p>🔥 6 gün seri</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>🎯 Günlük Hedef</h5>
+              <div class="topic-row"><span>12 / 15 soru</span><span></span></div>
+              <div class="topic-bar-track" style="margin-bottom:0;"><div class="topic-bar-fill" style="width:80%; background:#0d9488;"></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>🏆 Başarılarım <span style="font-weight:400; color:#94a3b8;">(5/7)</span></h5>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <span class="mock-badge badge-teal">🎯 İlk Adım</span>
+                <span class="mock-badge badge-teal">🔥 Isınma Turu</span>
+                <span class="mock-badge badge-teal">💪 Kararlılık</span>
+                <span class="mock-badge badge-teal">🧠 Konu Fatihi</span>
+                <span class="mock-badge badge-coral">🔢 Matematik Ustası</span>
+              </div>
+            </div>
+            <div class="mock-card" style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.6rem;">📊</span>
+              <div>
+                <div style="font-family:-apple-system,sans-serif; font-weight:800; font-size:.78rem; color:#0f2f2a;">İsimsiz sıralama: 142. sıradasın</div>
+                <div style="font-family:-apple-system,sans-serif; font-size:.64rem; color:#94a3b8; margin-top:2px;">1.850 öğrenci arasında — kimlik hiç görünmez, sadece sıran gösterilir.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 8. FLOW: A DAY -->
+<section class="slide" id="v8" data-notes="💡 Vurgu: Bu slayt, ürünün gündelik hayata nasıl oturduğunu anlatan bir hikaye anı. Velinin hiçbir şey takip etmek zorunda olmadığını, sistemin kendisinin bunu yaptığını vurgulayın.
+
+❓ Olası soru: Çocuğum her gün ne kadar zaman ayırmalı?
+✅ Cevap: Günlük hedef 15 soru — genelde 20-30 dakika sürüyor, okul sonrası kolayca sığdırılabilecek bir süre.">
+  <div class="slide-inner">
+    <div class="kicker">Gündelik Hayatta</div>
+    <h2>Bir günün nasıl geçiyor?</h2>
+    <p class="lead">Sistemin sizin için çalıştığı, sizin takip etmenize gerek kalmadığı bir akış.</p>
+    <div class="flow">
+      <div class="flow-step"><span class="num">1</span><h3>Okul Sonrası</h3><p>Çocuğunuz günlük hedefi (15 soru) kendi zamanında tamamlar.</p></div>
+      <div class="flow-step"><span class="num">2</span><h3>Anında Geri Bildirim</h3><p>Her yanlış soru, çözümüyle birlikte anında gösterilir.</p></div>
+      <div class="flow-step"><span class="num">3</span><h3>Akşam Özeti</h3><p>Siz hiçbir şey yapmadan, günün özeti size otomatik gönderilir.</p></div>
+      <div class="flow-step"><span class="num">4</span><h3>Hafta Sonu Deneme</h3><p>2 haftada bir, gerçek formatta bir deneme sınavı ile ilerleme ölçülür.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8b. SCREENSHOT: TIME MANAGEMENT -->
+<section class="slide" id="v8b" data-notes="💡 Vurgu: Sadece 'doğru mu yanlış mı' değil, 'ne kadar sürede çözdü' de takip ediliyor. Çocuğunuzun bir soruda normalden çok uzun kaldığı konular veliye özet olarak gösteriliyor — soru bazlı detay bilerek verilmiyor, veliyi gereksiz detayla boğmuyoruz.
+
+❓ Olası soru: Çocuğumun hangi soruda ne kadar kaldığını tek tek görebilir miyim?
+✅ Cevap: Bilerek göstermiyoruz — bu detay öğrencinin kendi ekranında var, size sadece 'hangi konuda genel olarak yavaş' özetini veriyoruz, gereksiz mikro-yönetime girmenize gerek kalmıyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Sadece doğru/yanlış değil — ne kadar sürede çözdüğü de önemli</h2>
+    <p class="lead">Bir konuda normalden çok uzun süren sorular fark edilir — size sadece hangi konuda yavaşladığının özeti gelir, gereksiz soru bazlı detayla uğraşmazsınız.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header teal">
+            <div class="emoji">👨‍👩‍👧</div>
+            <h4>Elif Yılmaz</h4>
+            <p>Veli Paneli</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>⏱ Yavaş Konular</h5>
+              <p class="hint">Ortalamanın belirgin üzerinde zaman harcanan konular</p>
+              <div class="mock-row"><div><div class="name">🔢 Kesirlerle İşlemler</div><div class="sub">Matematik</div></div><div class="right"><span class="mock-badge badge-coral">Ort. 2dk 40sn</span></div></div>
+              <div class="mock-row"><div><div class="name">🔬 Kuvvet ve Hareket</div><div class="sub">Fen Bilimleri</div></div><div class="right"><span class="mock-badge badge-coral">Ort. 2dk 05sn</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 9. SCREENSHOT: PARENT TARGET + DIFFICULTY -->
+<section class="slide" id="v9" data-notes="💡 Vurgu: Kontrolün velide olduğunu net şekilde belirtin — hedef okulu siz belirlersiniz, sorunun zorluğunu siz ayarlarsınız, çocuğunuza bırakılmaz (öğrenci hep 'kolay' seçer kaygısı).
+
+❓ Olası soru: Hedef okulun taban puanını nereden bulacağız?
+✅ Cevap: MEB'in resmi taban puan tablolarından veya bildiğiniz bir kaynaktan siz girersiniz, sistem bunu deneme sonuçlarıyla kıyaslar.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Siz kontrol edersiniz: hedef okul &amp; zorluk seviyesi</h2>
+    <p class="lead">Hedef okulu ve gerekli puanı siz girersiniz, sistem deneme sonuçlarıyla kıyaslar. Soruların zorluk seviyesini de siz belirlersiniz, çocuğunuza bırakılmaz.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header teal">
+            <div class="emoji">👨‍👩‍👧</div>
+            <h4>Elif Yılmaz</h4>
+            <p>Veli Paneli</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>🏫 Hedef Okul</h5>
+              <div style="display:flex; align-items:center; justify-content:space-between; font-family:-apple-system,sans-serif;">
+                <span style="font-size:.76rem; font-weight:800; color:#334155;">Beykoz Fen Lisesi</span>
+                <span class="mock-badge badge-teal">Düzenle</span>
+              </div>
+              <div style="display:flex; gap:16px; margin-top:8px; font-family:-apple-system,sans-serif;">
+                <div style="font-size:.68rem; color:#64748b;">Gerekli Puan: <b style="color:#334155;">440</b></div>
+                <div style="font-size:.68rem; color:#16a34a; font-weight:700;">+18 üstünde</div>
+              </div>
+            </div>
+            <div class="mock-card">
+              <h5>🎚️ Soru Zorluk Seviyesi</h5>
+              <div style="display:flex; gap:8px;">
+                <div style="flex:1; text-align:center; background:#f1f5f9; color:#64748b; border-radius:9px; padding:8px; font-family:-apple-system,sans-serif; font-size:.7rem; font-weight:700;">Standart</div>
+                <div style="flex:1; text-align:center; background:#0d9488; color:#fff; border-radius:9px; padding:8px; font-family:-apple-system,sans-serif; font-size:.7rem; font-weight:700;">Zorlayıcı</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 10. SCREENSHOT: PARENT NOTIFICATION PREFS -->
+<section class="slide" id="v10" data-notes="💡 Vurgu: 'Siz hiçbir şeyi takip etmek zorunda değilsiniz' — bildirim tercihlerini kendiniz seçersiniz. Deneme sonrası yanlış/boş soruları çözümüyle inceleyebilmeniz önemli bir detay.
+
+❓ Olası soru: Bildirimleri kapatırsam çocuğumun durumunu hiç göremez miyim?
+✅ Cevap: Hayır, göremez demek doğru değil — istediğiniz zaman panele girip tüm veriyi görebilirsiniz, sadece otomatik mail akışı duruyor.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Hiçbir şeyi takip etmek zorunda değilsiniz</h2>
+    <p class="lead">Hangi bildirimi almak istediğinizi siz seçersiniz; deneme sonrası yanlış ve boş sorular, çözümüyle birlikte incelenebilir.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <h5>✉️ Bildirim Tercihleri</h5>
+              <div class="mock-row"><div class="name">📚 Günlük Sınav Tamamlandı</div><div class="right"><span class="mock-badge badge-green">Açık</span></div></div>
+              <div class="mock-row"><div class="name">📈 Haftalık Gelişim Raporu</div><div class="right"><span class="mock-badge badge-green">Açık</span></div></div>
+              <div class="mock-row"><div class="name">⏰ Deneme Sınavı Hatırlatması</div><div class="right"><span class="mock-badge" style="background:#f1f5f9; color:#94a3b8;">Kapalı</span></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>🧾 Deneme Sonrası: Yanlış / Boş Sorular</h5>
+              <div class="mock-row"><div class="name">Soru 12 — Kesirlerle İşlemler ✗</div><div class="right"><span class="mock-badge badge-teal">Çözümü Gör</span></div></div>
+              <div class="mock-row"><div class="name">Soru 47 — Fiilimsiler (boş) ⬜</div><div class="right"><span class="mock-badge badge-teal">Çözümü Gör</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve içerikler temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 11. SCREENSHOT: PARENT EMAILS (3 mails) -->
+<section class="slide" id="v11" data-notes="💡 Vurgu: Üç farklı otomatik mail, sizin hiçbir şey yapmanıza gerek kalmadan bilgilendiriyor. Günlük özet aynı dersten birden fazla oturum varsa hepsini tek kartta topluyor. Haftalık rapor geçen haftaya göre kıyaslama ve hedef okul ilerlemesi gösteriyor. Deneme hatırlatması saat penceresini, katılım durumunu ve zayıf konudaki değişimi (🔁 kronik / 🆕 yeni) gösteriyor.
+
+❓ Olası soru: Bu mailler spam'e düşer mi?
+✅ Cevap: Kurumsal mail altyapısından (bilgi@hedefimlgs.com) gönderiliyor, gelen kutunuzu kontrol etmeniz yeterli.
+
+❓ Olası soru: Bu maillerin hepsini almak zorunda mıyım?
+✅ Cevap: Hayır — her birini panelinizden ayrı ayrı açıp kapatabilirsiniz, tercih tamamen sizde.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>Size giden mailler</h2>
+    <p class="lead">Üç farklı otomatik mail, sizi hiçbir şey yapmanıza gerek kalmadan bilgilendiriyor.</p>
+    <div class="mail-row">
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">📅 Ela — Bugünkü Çalışma Özeti</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">📅 Günlük Özet</p>
+          <div style="background:#e2f5f0; border-radius:10px; padding:10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-weight:800; font-size:.68rem; color:#0f2f2a; margin-bottom:6px;">🔢 Matematik <span style="font-weight:400; color:#94a3b8;">· 2 oturum</span></div>
+            <div style="text-align:center; font-family:-apple-system,sans-serif; font-size:.78rem; font-weight:900; color:#0d8c78; margin-bottom:4px;">%68 Başarı</div>
+            <div style="text-align:center;"><span class="mock-badge" style="background:#dcfce7; color:#15803d;">▲ +3.7 net</span></div>
+          </div>
+          <div style="background:#fff1ec; border-radius:10px; padding:8px 10px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#c2410c; margin-bottom:4px;">📘 Desteğe İhtiyaç Duyduğu Konular</div>
+            <ul style="margin:0; padding-left:14px; font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+              <li>Kesirlerle İşlemler</li>
+              <li>Üslü İfadeler</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">📈 Elif — Haftalık Gelişim</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">📈 Haftalık Gelişim Raporu</p>
+          <div style="background:#e2f5f0; border-radius:10px; padding:10px; margin-bottom:8px; text-align:center;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.6rem; color:#5f7069;">🏆 Bu Haftaki Deneme</div>
+            <div style="font-family:Georgia,serif; font-size:1.25rem; font-weight:900; color:#0d8c78;">421.7</div>
+            <span class="mock-badge" style="background:#dcfce7; color:#15803d;">▲ +9 puan</span>
+          </div>
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:8px 10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#1d4ed8;">🎯 Hedef Okula Göre Durum</div>
+            <div style="background:#dbeafe; border-radius:100px; height:6px; margin:5px 0 3px; overflow:hidden;"><div style="background:#2563eb; height:100%; width:96%;"></div></div>
+            <div style="font-family:-apple-system,sans-serif; font-size:.58rem; color:#1d4ed8; font-weight:700;">Hedefine 18.3 puan kaldı</div>
+          </div>
+          <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#c2410c; margin-bottom:4px;">📘 Gelişmesi Gereken Konular</div>
+          <ul style="margin:0; padding-left:14px; font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+            <li>Kesirlerle İşlemler</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mail-frame mini">
+        <div class="mail-topbar">
+          <div class="subject">⏰ Ela — Yarın Deneme Var</div>
+          <div class="meta">bilgi@hedefimlgs.com</div>
+        </div>
+        <div class="mail-body">
+          <p class="mail-label">⏰ Yarın Deneme Sınavı Var</p>
+          <div style="background:#e2f5f0; border-radius:10px; padding:8px 10px; margin-bottom:8px; font-family:-apple-system,sans-serif; font-size:.6rem; color:#5f7069;">
+            🕐 Sınav 10:00–19:00 arası aktif
+          </div>
+          <div style="text-align:center; margin-bottom:8px;">
+            <span style="display:inline-block; background:#0d8c78; color:#fff; font-weight:700; font-size:.6rem; padding:6px 14px; border-radius:100px;">🚀 Panele Git</span>
+          </div>
+          <div style="background:#f0fdfa; border-radius:10px; padding:8px 10px; margin-bottom:8px;">
+            <div style="font-family:-apple-system,sans-serif; font-size:.62rem; font-weight:800; color:#0f766e;">📆 Katılım Durumu</div>
+            <div style="font-family:-apple-system,sans-serif; font-size:.6rem; color:#374151; margin-top:2px;">Son 4 denemeden 3'üne katıldı</div>
+          </div>
+          <div style="font-family:-apple-system,sans-serif; font-size:.62rem; color:#374151;">
+            Kesirlerle İşlemler <span style="background:#ffe4da; color:#c2410c; font-size:.52rem; font-weight:700; padding:1px 5px; border-radius:5px;">🔁 3 hafta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 12. COMPARISON TABLE -->
+<section class="slide" id="v12" data-notes="💡 Vurgu: Rakip iddiası değil, kıyaslama davet edin. Şu an kullandığınız yöntemle (özel ders, genel uygulama) kendi kafanızda karşılaştırın deyin.
+
+❓ Olası soru: Özel dersimizle bu ürün arasında ne fark var?
+✅ Cevap: Özel ders haftada birkaç saat bire bir ilgi sağlar, bu sistem her gün, her soruda arka planda çalışır — ikisi birbirini dışlamaz, birlikte kullanılabilir.">
+  <div class="slide-inner">
+    <div class="kicker">Neden Hedefim LGS</div>
+    <h2>Özel ders ve genel uygulamalarla kıyaslayın</h2>
+    <p class="lead">İddia değil, elimizdeki gerçek özellikler üzerinden bir kıyaslama — siz de kendi mevcut yönteminizle karşılaştırabilirsiniz.</p>
+    <div class="compare-table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr><th>Özellik</th><th>Genel Soru Bankası</th><th>Özel Ders</th><th>Hedefim LGS</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feature-name">Kişiselleştirilmiş soru üretimi</td><td class="check no">—</td><td class="check yes">Kısmen</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Adım adım çözüm gösterimi</td><td class="check no">Bazen</td><td class="check yes">✓</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Her gün erişim</td><td class="check yes">✓</td><td class="check no">Haftada 1-2 saat</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Otomatik veli bilgilendirmesi</td><td class="check no">—</td><td class="check no">—</td><td class="check yes">✓</td></tr>
+          <tr><td class="feature-name">Gerçek LGS formatında deneme</td><td class="check no">—</td><td class="check no">Nadiren</td><td class="check yes">✓ 2 haftada bir</td></tr>
+          <tr><td class="feature-name">Konu bazlı ilerleme haritası</td><td class="check no">—</td><td class="check no">Elle takip</td><td class="check yes">✓ Otomatik</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 13. SCREENSHOT: PLACEMENT (SEVİYE TESPİT) RESULT -->
+<section class="slide" id="v13" data-notes="💡 Vurgu: Çocuğunuz sisteme ilk girdiğinde önce bir seviye tespit sınavı çözüyor — bu, kişiselleştirmenin başladığı ilk andır. Sonuç sadece bir puan değil, ders ve konu bazlı bir döküm; 'desteğe ihtiyaç duyulan konular' otomatik olarak belirleniyor ve size mail olarak da gidiyor.
+
+❓ Olası soru: Bu sınav ne kadar sürüyor, çocuğumu yorar mı?
+✅ Cevap: Standart bir LGS denemesi kadar, ama sadece ilk günde bir kez yapılıyor — sistemin ona nereden başlayacağını bilmesi için gerekli.">
+  <div class="slide-inner">
+    <div class="kicker">Ekran Görüntüsü</div>
+    <h2>İlk gün: seviye tespit sonucu, konu konu</h2>
+    <p class="lead">Çocuğunuz sisteme ilk girdiğinde bir seviye tespit sınavı çözer; sonuç sadece bir puan değil, ders ve konu bazlı bir döküm olarak hem panelde hem de size giden mailde görünür.</p>
+    <div class="shot-wrap">
+      <div class="browser-frame">
+        <div class="browser-topbar">
+          <span class="browser-dot" style="background:#ff5f57;"></span>
+          <span class="browser-dot" style="background:#febc2e;"></span>
+          <span class="browser-dot" style="background:#28c840;"></span>
+          <span class="browser-url">hedefimlgs.com</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-header teal">
+            <div class="emoji">📊</div>
+            <h4>Seviye Tespit Sonucu</h4>
+            <p>Tahmini Puan: 348</p>
+          </div>
+          <div class="mock-section" style="padding-top:14px;">
+            <div class="mock-card">
+              <div class="topic-row"><span>🔢 Matematik</span><span style="font-weight:700; color:#dc2626;">%35</span></div>
+              <div class="topic-bar-track"><div class="topic-bar-fill" style="width:35%; background:#ef4444;"></div></div>
+              <div class="topic-row"><span>🔬 Fen Bilimleri</span><span style="font-weight:700; color:#d97706;">%45</span></div>
+              <div class="topic-bar-track"><div class="topic-bar-fill" style="width:45%; background:#f59e0b;"></div></div>
+              <div class="topic-row"><span>📖 Türkçe</span><span style="font-weight:700; color:#16a34a;">%60</span></div>
+              <div class="topic-bar-track" style="margin-bottom:0;"><div class="topic-bar-fill" style="width:60%; background:#22c55e;"></div></div>
+            </div>
+            <div class="mock-card">
+              <h5>📘 Desteğe İhtiyaç Duyduğu Konular</h5>
+              <div class="mock-row"><div class="name">Kesirlerle İşlemler <span class="sub">(Matematik)</span></div></div>
+              <div class="mock-row"><div class="name">Kuvvet ve Hareket <span class="sub">(Fen Bilimleri)</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="shot-caption"><b>Not:</b> Bu ekrandaki isim, konu ve sayılar temsili örneklerdir, gerçek kullanıcı verisi değildir.</p>
+  </div>
+</section>
+
+<!-- 14. CLOSING -->
+<section class="slide closing" id="v14" data-notes="💡 Vurgu: Deneme talebini net yapın. Fiyat sorulursa 'bunu ayrı bir görüşmede netleştirelim' deyip yönlendirin, burada rakam telaffuz etmeyin.
+
+❓ Olası soru: Fiyat ne kadar?
+✅ Cevap: 'Deneme talebinizi alalım, detayları görüşmede netleştirelim' diyerek yönlendirin.">
+  <div class="slide-inner">
+    <div class="kicker" style="color:var(--coral);">Kapanış</div>
+    <h2>Çocuğunuz için 3 gün ücretsiz deneyin</h2>
+    <p>Kredi kartı gerekmez, taahhüt yok. Talebinizi bırakın, size dönelim ve hesabınızı birlikte açalım.</p>
+    <div class="stat-row">
+      <div class="stat"><b>3 Gün</b><span>Ücretsiz Deneme</span></div>
+      <div class="stat"><b>%100</b><span>Canlı Sistem</span></div>
+      <div class="stat"><b>0</b><span>Kurulum Zahmeti</span></div>
+    </div>
+
+    <div class="pilot-toggle-wrap">
+      <div class="cta-row">
+        <button class="cta primary" id="pilotToggleBtn" type="button">Ücretsiz Deneme İsteyin</button>
+        <span class="cta ghost">hedefimlgs.com</span>
+      </div>
+
+      <form class="pilot-form" id="pilotForm" hidden>
+        <div class="row">
+          <div>
+            <label for="pf-parent">Veli Adı Soyadı *</label>
+            <input id="pf-parent" name="parentName" type="text" required placeholder="Ad Soyad" />
+          </div>
+          <div>
+            <label for="pf-phone">Telefon *</label>
+            <input id="pf-phone" name="phone" type="tel" required placeholder="05xxxxxxxxx"
+              inputmode="numeric" pattern="[0-9]{11}" minlength="11" maxlength="11"
+              title="Telefon numarası tam olarak 11 haneli olmalı (Örn: 05xxxxxxxxx)" />
+          </div>
+        </div>
+        <div class="row single">
+          <div>
+            <label for="pf-email">E-posta *</label>
+            <input id="pf-email" name="email" type="email" required placeholder="ornek@mail.com"
+              pattern="[^\s@]+@[^\s@]+\.[^\s@]+" title="Geçerli bir e-posta adresi girin" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="pf-student">Öğrenci Adı Soyadı *</label>
+            <input id="pf-student" name="studentName" type="text" required placeholder="Ad Soyad" />
+          </div>
+          <div>
+            <label for="pf-grade">Sınıf *</label>
+            <select id="pf-grade" name="grade" required>
+              <option value="">Seçiniz</option>
+              <option value="7. Sınıf">7. Sınıf</option>
+              <option value="8. Sınıf">8. Sınıf</option>
+            </select>
+          </div>
+        </div>
+        <div class="row single">
+          <div>
+            <label for="pf-note">Not (opsiyonel)</label>
+            <textarea id="pf-note" name="note" placeholder="Eklemek istediğiniz bir şey var mı?"></textarea>
+          </div>
+        </div>
+        <button class="submit-btn" type="submit" id="pilotSubmitBtn">Talebi Gönder</button>
+        <div class="form-msg" id="pilotFormMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dots = [...document.querySelectorAll('.dots a')];
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counterNow = document.getElementById('counterNow');
+  counterNow.textContent = 1;
+  document.getElementById('counterTotal').textContent = slides.length;
+
+  let current = 0;
+
+  function render() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('prev');
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    counterNow.textContent = current + 1;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    window.presenterState = { current, total: slides.length };
+  }
+
+  // Sunucu Görünümü penceresinin okuması için: slayt başlığı + notu
+  window.getSlideInfo = function (i) {
+    const s = slides[i];
+    if (!s) return null;
+    const heading = s.querySelector('h1, h2');
+    return { title: heading ? heading.textContent.trim() : '', notes: s.dataset.notes || '' };
+  };
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    render();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  dots.forEach(d => d.addEventListener('click', e => {
+    e.preventDefault();
+    goTo(parseInt(d.dataset.goto, 10));
+  }));
+
+  document.addEventListener('keydown', (e) => {
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+    if (e.key === 'p' || e.key === 'P') { window.open('presenter.html', 'hedefimlgs_presenter', 'width=760,height=640'); }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 60) goTo(current + (dx < 0 ? 1 : -1));
+    touchStartX = null;
+  }, { passive: true });
+
+  document.getElementById('coverNext').addEventListener('click', () => goTo(current + 1));
+
+  document.getElementById('presenterBtn').addEventListener('click', () => {
+    window.open('presenter.html', 'hedefimlgs_presenter', 'width=760,height=640');
+  });
+
+  // Ücretsiz deneme talep formu
+  const pilotToggleBtn = document.getElementById('pilotToggleBtn');
+  const pilotForm = document.getElementById('pilotForm');
+  const pilotPhoneInput = document.getElementById('pf-phone');
+  pilotPhoneInput.addEventListener('input', () => {
+    pilotPhoneInput.value = pilotPhoneInput.value.replace(/\D/g, '').slice(0, 11);
+  });
+  pilotToggleBtn.addEventListener('click', () => {
+    pilotForm.hidden = !pilotForm.hidden;
+    if (!pilotForm.hidden) document.getElementById('pf-parent').focus();
+  });
+
+  pilotForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('pilotSubmitBtn');
+    const msg = document.getElementById('pilotFormMsg');
+    msg.textContent = ''; msg.className = 'form-msg';
+
+    const data = Object.fromEntries(new FormData(pilotForm).entries());
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Gönderiliyor...';
+
+    try {
+      const res = await fetch('/api/trial-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Bir hata oluştu');
+      msg.textContent = '✅ Talebiniz alındı, en kısa sürede sizinle iletişime geçeceğiz.';
+      msg.classList.add('ok');
+      pilotForm.reset();
+      submitBtn.textContent = 'Talebi Gönder';
+      submitBtn.disabled = false;
+    } catch (err) {
+      msg.textContent = '❌ ' + (err.message || 'Talep gönderilemedi, lütfen tekrar deneyin.');
+      msg.classList.add('err');
+      submitBtn.textContent = 'Talebi Gönder';
+      submitBtn.disabled = false;
+    }
+  });
+
+  render();
+</script>
+</body>
+</html>

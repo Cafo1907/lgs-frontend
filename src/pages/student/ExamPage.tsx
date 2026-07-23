@@ -25,16 +25,34 @@ export default function ExamPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submitted = useRef(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportSent, setReportSent] = useState<Record<number, boolean>>({});
+  const [reportSending, setReportSending] = useState(false);
 
   const questions = state?.questions ?? [];
+
+  // Soru başına harcanan süreyi ölçer: ileri/geri gidişlerde biriktirir.
+  const timeAccum = useRef<Record<number, number>>({});
+  const enterTimeRef = useRef<number>(Date.now());
+  const flushCurrentQuestionTime = useCallback(() => {
+    const q = questions[currentIdx];
+    if (q) {
+      const elapsed = Date.now() - enterTimeRef.current;
+      timeAccum.current[q.id] = (timeAccum.current[q.id] ?? 0) + elapsed;
+    }
+    enterTimeRef.current = Date.now();
+  }, [questions, currentIdx]);
+  const goToIndex = (i: number) => { flushCurrentQuestionTime(); setCurrentIdx(i); };
 
   const doSubmit = useCallback(async () => {
     if (submitted.current || !examId) return;
     submitted.current = true;
+    flushCurrentQuestionTime();
     setSubmitting(true);
     try {
       const { data } = await axios.post(`/api/exam/${examId}/submit`, {
-        answers: questions.map(q => ({ questionId: q.id, answer: answers[q.id] ?? null })),
+        answers: questions.map(q => ({ questionId: q.id, answer: answers[q.id] ?? null, timeSpentMs: timeAccum.current[q.id] ?? 0 })),
       });
       navigate(`/result/${examId}`, { state: { result: data } });
     } catch {
@@ -42,7 +60,7 @@ export default function ExamPage() {
       setSubmitting(false);
       alert('Gönderilemedi, tekrar deneyin.');
     }
-  }, [examId, questions, answers, navigate]);
+  }, [examId, questions, answers, navigate, flushCurrentQuestionTime]);
 
   useEffect(() => {
     if (submitting || submitted.current) return;
@@ -53,15 +71,31 @@ export default function ExamPage() {
 
   useEffect(() => { if (timeUp && !submitted.current) setTimeout(() => doSubmit(), 1500); }, [timeUp, doSubmit]);
 
+  useEffect(() => { setReportOpen(false); setReportReason(''); }, [currentIdx]);
+
   if (!state) return <div className="flex items-center justify-center min-h-screen text-slate-500">Sınav verisi bulunamadı.</div>;
 
   const q = questions[currentIdx];
+  const sendReport = async () => {
+    if (!q) return;
+    setReportSending(true);
+    try {
+      await axios.post('/api/exam/report-question', { questionType: 'exam', questionId: q.id, questionText: q.text, reason: reportReason || null });
+      setReportSent(p => ({ ...p, [q.id]: true }));
+      setReportOpen(false);
+      setReportReason('');
+    } catch {
+      alert('Bildirim gönderilemedi, tekrar deneyin.');
+    } finally {
+      setReportSending(false);
+    }
+  };
   const sel = answers[q?.id];
   const answered = Object.values(answers).filter(v => v != null).length;
   const timerColor = timeLeft < 120 ? 'text-red-500' : timeLeft < 300 ? 'text-orange-500' : 'text-slate-800';
 
   return (
-    <div className="max-w-md mx-auto min-h-screen flex flex-col bg-slate-50">
+    <div className="max-w-2xl mx-auto min-h-screen flex flex-col bg-slate-50">
       {timeUp && (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl p-6 text-center max-w-xs w-full shadow-2xl">
@@ -123,15 +157,34 @@ export default function ExamPage() {
                 );
               })}
             </div>
+
+            <div className="mt-3 pt-3 border-t border-slate-100">
+              {reportSent[q.id] ? (
+                <p className="text-xs text-green-600">✓ Bildiriminiz alındı, teşekkürler.</p>
+              ) : reportOpen ? (
+                <div className="space-y-2">
+                  <textarea value={reportReason} onChange={e => setReportReason(e.target.value)} placeholder="Neyin yanlış/belirsiz olduğunu kısaca yazabilirsin (opsiyonel)"
+                    rows={2} className="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-red-300" />
+                  <div className="flex gap-2">
+                    <button onClick={() => setReportOpen(false)} className="flex-1 py-2 bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold">Vazgeç</button>
+                    <button onClick={sendReport} disabled={reportSending} className="flex-1 py-2 bg-red-500 text-white rounded-xl text-xs font-semibold disabled:opacity-50">
+                      {reportSending ? 'Gönderiliyor...' : 'Bildir'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => setReportOpen(true)} className="text-xs text-slate-400 hover:text-red-500">🚩 Bu soruda hata var mı?</button>
+              )}
+            </div>
           </div>
         )}
 
         {/* Navigasyon */}
         <div className="flex items-center justify-between gap-2">
-          <button onClick={() => setCurrentIdx(i => Math.max(0, i - 1))} disabled={currentIdx === 0}
+          <button onClick={() => goToIndex(Math.max(0, currentIdx - 1))} disabled={currentIdx === 0}
             className="flex-1 py-3 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 disabled:opacity-30">← Önceki</button>
           {currentIdx < questions.length - 1 ? (
-            <button onClick={() => setCurrentIdx(i => i + 1)} className="flex-1 py-3 bg-purple-500 text-white rounded-xl text-sm font-semibold">Sonraki →</button>
+            <button onClick={() => goToIndex(currentIdx + 1)} className="flex-1 py-3 bg-purple-500 text-white rounded-xl text-sm font-semibold">Sonraki →</button>
           ) : (
             <button onClick={() => setShowConfirm(true)} className="flex-1 py-3 bg-green-500 text-white rounded-xl text-sm font-semibold">✓ Bitir</button>
           )}
@@ -140,7 +193,7 @@ export default function ExamPage() {
         {/* Soru grid */}
         <div className="mt-4 grid grid-cols-10 gap-1">
           {questions.map((question, i) => (
-            <button key={question.id} onClick={() => setCurrentIdx(i)}
+            <button key={question.id} onClick={() => goToIndex(i)}
               className={`h-7 rounded-lg text-xs font-bold transition-all ${i === currentIdx ? 'bg-purple-600 text-white' : answers[question.id] ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-400'}`}>
               {i + 1}
             </button>

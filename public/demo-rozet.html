@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rozet Kutlama Efekti — Demo</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:#f8fafc; font-family:-apple-system,'Segoe UI',Roboto,sans-serif; padding:24px; gap:20px;
+  }
+  h1{font-size:1.1rem; color:#1e293b; margin:0;}
+  p{color:#64748b; font-size:.85rem; margin:0; text-align:center; max-width:320px;}
+  .trigger-btn{
+    background:#7c3aed; color:#fff; border:none; padding:14px 28px; border-radius:14px;
+    font-size:.95rem; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(124,58,237,.3);
+    transition:transform .15s;
+  }
+  .trigger-btn:active{transform:scale(0.95);}
+  .badge-picker{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:420px;}
+  .badge-pick{
+    background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:8px 12px;
+    font-size:.78rem; cursor:pointer; color:#475569; display:flex; align-items:center; gap:6px;
+  }
+  .badge-pick:hover{border-color:#7c3aed; color:#7c3aed;}
+
+  /* ── overlay ─────────────────────────── */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:50;
+    display:none; align-items:center; justify-content:center; padding:24px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    position:relative; background:#fff; border-radius:24px; padding:32px;
+    text-align:center; max-width:320px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,.3);
+    transform:scale(.75); opacity:0; transition:transform .3s, opacity .3s;
+  }
+  .modal.mounted{transform:scale(1); opacity:1;}
+  .confetti{position:absolute; font-size:1.4rem; animation:bounce 1s infinite;}
+  .c1{top:-8px; left:24px; animation-delay:0ms;}
+  .c2{top:-16px; right:32px; font-size:1.5rem; animation-delay:150ms;}
+  .c3{top:-4px; right:45%; font-size:1.2rem; animation-delay:300ms;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  @media (prefers-reduced-motion:reduce){.confetti{animation:none;}}
+
+  .kicker{font-size:.7rem; font-weight:800; color:#a855f7; text-transform:uppercase; letter-spacing:.06em; margin:0 0 8px;}
+  .badge-icon{font-size:3.6rem; margin-bottom:10px;}
+  .badge-title{font-weight:900; font-size:1.15rem; color:#1e293b; margin:0;}
+  .badge-desc{color:#94a3b8; font-size:.85rem; margin:4px 0 0;}
+  .close-btn{
+    margin-top:20px; width:100%; padding:12px; background:#7c3aed; color:#fff; border:none;
+    border-radius:12px; font-size:.9rem; font-weight:700; cursor:pointer; transition:transform .1s;
+  }
+  .close-btn:active{transform:scale(.95);}
+</style>
+</head>
+<body>
+
+  <h1>🏆 Rozet Kutlama Efekti — Demo</h1>
+  <p>Bu, öğrenci bir rozet kazandığında canlı sistemde gördüğü kutlama animasyonunun birebir kopyasıdır. Aşağıdan bir rozet seçip tetikleyebilirsin.</p>
+
+  <div class="badge-picker" id="picker"></div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal">
+      <span class="confetti c1">🎉</span>
+      <span class="confetti c2">✨</span>
+      <span class="confetti c3">🎊</span>
+      <p class="kicker">Yeni Rozet Kazandın!</p>
+      <div class="badge-icon" id="badgeIcon">🎯</div>
+      <h2 class="badge-title" id="badgeTitle">İlk Adım</h2>
+      <p class="badge-desc" id="badgeDesc">İlk sınavını tamamla</p>
+      <button class="close-btn" id="closeBtn">Harika! 🙌</button>
+    </div>
+  </div>
+
+<script>
+  const badges = [
+    { icon: '🎯', title: 'İlk Adım', desc: 'İlk sınavını tamamla' },
+    { icon: '🔥', title: 'Isınma Turu', desc: '3 gün üst üste çalış' },
+    { icon: '💪', title: 'Kararlılık', desc: '7 gün üst üste çalış' },
+    { icon: '📚', title: 'Çalışkan', desc: '25 sınav tamamla' },
+    { icon: '🏆', title: 'Deneme Ustası', desc: 'İlk deneme sınavını tamamla' },
+    { icon: '🧠', title: 'Konu Fatihi', desc: 'Bir konuda ustalaş (zayıflık skorunu 30 altına indir)' },
+    { icon: '⚡', title: "100'lük", desc: '100 soru çöz' },
+  ];
+
+  const picker = document.getElementById('picker');
+  badges.forEach((b, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'badge-pick';
+    btn.innerHTML = `<span>${b.icon}</span> ${b.title}`;
+    btn.onclick = () => showCelebration(i);
+    picker.appendChild(btn);
+  });
+
+  const overlay = document.getElementById('overlay');
+  const modal = document.getElementById('modal');
+
+  function showCelebration(i) {
+    const b = badges[i];
+    document.getElementById('badgeIcon').textContent = b.icon;
+    document.getElementById('badgeTitle').textContent = b.title;
+    document.getElementById('badgeDesc').textContent = b.desc;
+    overlay.classList.add('show');
+    modal.classList.remove('mounted');
+    requestAnimationFrame(() => requestAnimationFrame(() => modal.classList.add('mounted')));
+  }
+
+  function hideCelebration() {
+    overlay.classList.remove('show');
+  }
+
+  document.getElementById('closeBtn').addEventListener('click', hideCelebration);
+  overlay.addEventListener('click', e => { if (e.target === overlay) hideCelebration(); });
+</script>
+</body>
+</html>
